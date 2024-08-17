@@ -1,0 +1,102 @@
+<!-- views/login.hbs -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signin</title>
+  <link href="/css/styles.css" rel="stylesheet">
+  <link rel="stylesheet" href="/fontawesome-free-6.5.2-web/css/all.min.css">
+
+  <style>
+    #main {
+      height: calc(100vh - 10rem);
+      /* Tinggi viewport - 10rem (misalnya untuk menyesuaikan dengan margin diatasnya) */
+    }
+  </style>
+
+</head>
+
+<body>
+  {{>upperPart }}
+
+  {{#if messages.error}}
+  <div id="message" class="fixed top-20 lg:top-24 inset-x-0 mx-auto w-full max-w-screen-md px-4 lg:z-50">
+    <div role="alert"
+      class="bg-red-500 text-white font-bold px-4 py-3 lg:py-2 rounded-md flex items-center justify-between shadow-md">
+      <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6 hidden lg:block" fill="none" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <span class="flex-grow lg:pl-3">{{messages.error}}</span>
+      <button type="button" class="text-white close lg:pb-2" onclick="closeAlert()">
+        <span aria-hidden="true" class="font-bold text-2xl">&times;</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    function closeAlert() {
+      document.getElementById('message').style.display = 'none';
+    }
+  </script>
+  {{/if}}
+
+  <div id="main" class="flex justify-center items-center flex-col mx-5 my-5 lg:mx-auto lg:mt-10 lg:mb-0">
+    <div class="card sm:card-side !static bg-cyan-700 shadow-xl w-full sm:w-4/5 lg:h-auto lg:w-1/2">
+      <figure class="w-full h-auto flex !items-stretch">
+        <img src="/assets/signin.jpeg" alt="Movie" class="hidden sm:block inset-0 w-full h-auto" />
+      </figure>
+
+      <div class="card-body sm:p-8 flex flex-col items-center w-full lg:justify-start lg:h-full lg:pl-8">
+        <div class="mb-2 lg:mb-0 w-full flex justify-center flex-col">
+          <h2 class="card-title text-white font-extrabold text-2xl justify-center">Signin</h2>
+          <div class="divider divider-info m-0 w-full"></div>
+        </div>
+
+        <form action="/signin" method="POST" class="flex flex-col justify-evenly w-full px-4 h-full">
+          <div class="items-center">
+            <div class="mb-4">
+              <label for="fullname" class="block font-medium text-white">Fullname &nbsp;:</label>
+              <input type="text" id="fullname" name="fullname" required
+                class="mt-1 p-2 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md text-black bg-white h-6">
+            </div>
+            <div class="mb-4">
+              <label for="username" class="block font-medium text-white">Username :</label>
+              <input type="text" id="username" name="username" required
+                class="mt-1 p-2 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md text-black bg-white h-6">
+            </div>
+            <div class="mb-4">
+              <label for="password" class="block font-medium text-white">Password &nbsp;:</label>
+              <input type="password" id="password" name="password" required
+                class="mt-1 p-2 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md text-black bg-white h-6">
+            </div>
+          </div>
+
+          <div class="card-actions px-10 mt-6">
+            <button type="submit"
+              class="w-full btn bg-base-200 h-10 text-white font-extrabold py-2 px-4 glass">Signin</button>
+          </div>
+        </form>
+      </div>
+
+
+
+    </div>
+
+    <div class="fixed bottom-6 w-full flex justify-center">
+      <div class="text-white inline-flex">
+        <p>Already have an account? </p>
+        <a href="/login" class="link link-primary ml-1"> Login</a>
+      </div>
+    </div>
+  </div>
+
+
+  {{>belowPart }}
+
+</body>
+
+</html>

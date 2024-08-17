@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome</title>
+  <link href="/css/styles.css" rel="stylesheet">
+  <link rel="stylesheet" href="/fontawesome-free-6.5.2-web/css/all.min.css">
+</head>
+
+<body class="w-full">
+  {{>upperPart }}
+
+  {{#if messages.success}}
+  <div id="success-message" class="fixed inset-x-0 mx-auto w-full max-w-screen-md px-4 lg:z-50">
+    <div role="alert"
+      class="bg-green-500 text-white font-bold px-4 py-3 lg:py-2 rounded-md flex items-center justify-between shadow-md">
+      <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6 hidden lg:block" fill="none"
+        viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <span class="flex-grow lg:pl-3" id="success-text">Welcome, {{user.username}} !</span>
+      <button type="button" class="text-white close lg:pb-2" onclick="closeSuccessAlert()">
+        <span aria-hidden="true" class="font-bold text-2xl">&times;</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    function closeSuccessAlert() {
+      document.getElementById('success-message').style.display = 'none';
+    }
+
+    setTimeout(() => {
+      document.getElementById('success-message').style.display = "none";
+    }, 5000);
+  </script>
+  {{/if}}
+
+  <div id="main" class="flex justify-center items-center  px-4 md:p-10">
+    <div id="books-list" class="w-full flex justify-center items-center">
+      <div class="card !static bg-cyan-700 shadow-xl w-full sm:w-4/5 lg:h-auto lg:w-3/5 pb-3 lg:pb-0 mt-2">
+        <div class="card-body p-4 lg:p-8 flex flex-col items-center w-full lg:justify-start lg:h-full lg:pl-8">
+          <h2 class="card-title text-white font-extrabold text-2xl justify-center mt-2 mb-2">Books
+            <span class="text-base font-normal">available for trade</span>
+          </h2>
+          {{#if books.length}}
+          <table id="books-table" class="table !static text-center text-white text-lg bg-gray-800">
+            {{#each books}}
+            <tr class="book-row">
+              <td>
+                <p class="font-bold">{{this.title}}</p>
+                <p class="font-light">{{this.description}}</p>
+              </td>
+              <td>
+                <p>
+                  <span class="font-light">from</span>
+                  <span class="font-bold">{{this.giver.username}}</span>
+                </p>
+                <p>
+                  <span class="text-base font-normal">
+                    {{#if this.giver.city}}
+                    {{this.giver.city}}
+                    {{/if}}
+                    {{#if this.giver.state}}
+                    , {{this.giver.state}}
+                    {{/if}}
+                    {{#if this.giver.address}}
+                    , {{this.giver.address}}
+                    {{/if}}
+                  </span>
+                </p>
+              </td>
+            </tr>
+            {{/each}}
+          </table>
+          {{else}}
+          <table id="empty-user-books" class="table !static text-center text-white text-lg bg-gray-800">
+            <tr>
+              <td>
+                No available books at the moment.
+              </td>
+            </tr>
+          </table>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{>belowPart }}
+
+  <script>
+    // Ambil token dari cookie
+    const cookieToken = document.cookie.split('; ').find(row => row.startsWith('token='));
+
+    if (cookieToken) {
+      // Parse token dari cookie
+      const token = cookieToken.split('=')[1];
+
+      // Simpan token ke dalam localStorage
+      localStorage.setItem('jwtToken', token);
+
+      // Hapus token dari cookie (opsional)
+      document.cookie = 'token=; Max-Age=0;'; // Menetapkan waktu maksimum cookie ke 0 akan menghapusnya
+    }
+
+  </script>
+</body>
+
+</html>

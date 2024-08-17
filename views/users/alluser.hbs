@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Users</title>
+  <link href="/css/styles.css" rel="stylesheet">
+  <link rel="stylesheet" href="/fontawesome-free-6.5.2-web/css/all.min.css">
+</head>
+
+<body class="w-full">
+  {{>upperPart }}
+
+  <div id="main" class="flex justify-center items-center px-4 md:p-10">
+    <div id="users-list" class="w-full flex justify-center items-center">
+      <div class="card !static bg-cyan-700 shadow-xl w-full sm:w-4/5 lg:h-auto lg:w-3/5 pb-3 lg:pb-0 mt-2">
+        <div class="card-body p-4 lg:p-8 flex flex-col items-center w-full lg:justify-start lg:h-full lg:pl-8">
+          <h2 class="card-title text-white font-extrabold text-2xl justify-center mt-2 mb-2">All users
+          </h2>
+          {{#if allUser.length}}
+          <table id="users-table" class="table !static text-left text-white text-lg bg-gray-800">
+            {{#each allUser}}
+            <tr class="book-row">
+              <td>
+                <p>
+                  <span class="font-bold">{{this.username}}</span>
+                </p>
+                <p>
+                  <span class="text-base font-normal">
+                    {{#if this.city}}
+                    {{this.city}}
+                    {{/if}}
+                    {{#if this.state}}
+                    , {{this.state}}
+                    {{/if}}
+                    {{#if this.address}}
+                    , {{this.address}}
+                    {{/if}}
+                  </span>
+                </p>
+              </td>
+            </tr>
+            {{/each}}
+          </table>
+          {{else}}
+          <table id="empty-user-users" class="table !static text-center text-white text-lg bg-gray-800">
+            <tr>
+              <td>
+                No available users at the moment.
+              </td>
+            </tr>
+          </table>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{>belowPart }}
+
+  <script>
+    // Ambil token dari cookie
+    const cookieToken = document.cookie.split('; ').find(row => row.startsWith('token='));
+
+    if (cookieToken) {
+      // Parse token dari cookie
+      const token = cookieToken.split('=')[1];
+
+      // Simpan token ke dalam localStorage
+      localStorage.setItem('jwtToken', token);
+
+      // Hapus token dari cookie (opsional)
+      document.cookie = 'token=; Max-Age=0;'; // Menetapkan waktu maksimum cookie ke 0 akan menghapusnya
+    }
+
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,6 @@
+{
+  "watch": ["src", "views", "public"],
+  "ext": "ts,hbs,css,js",
+  "ignore": ["src/**/*.spec.ts"],
+  "exec": "ts-node ./src/main.ts"
+}

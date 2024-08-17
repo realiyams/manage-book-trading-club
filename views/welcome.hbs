@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome</title>
+  <link href="/css/styles.css" rel="stylesheet">
+  <link rel="stylesheet" href="/fontawesome-free-6.5.2-web/css/all.min.css">
+</head>
+
+<body class="w-full" style="height:1500px">
+  {{>upperPart }}
+
+  {{#if messages.success}}
+  <div id="success-message" class="fixed inset-x-0 mx-auto w-full max-w-screen-md px-4 lg:z-50">
+    <div role="alert"
+      class="bg-green-500 text-white font-bold px-4 py-3 lg:py-2 rounded-md flex items-center justify-between shadow-md">
+      <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6 hidden lg:block" fill="none"
+        viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <span class="flex-grow lg:pl-3" id="success-text">Welcome, {{user.username}} !</span>
+      <button type="button" class="text-white close lg:pb-2" onclick="closeSuccessAlert()">
+        <span aria-hidden="true" class="font-bold text-2xl">&times;</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    function closeSuccessAlert() {
+      document.getElementById('success-message').style.display = 'none';
+    }
+
+    setTimeout(() => {
+      document.getElementById('success-message').style.display = "none";
+    }, 5000);
+  </script>
+  {{/if}}
+
+  <div id="main" class="flex justify-center items-center  px-4 md:p-10" style="height: 2000px">
+    Your Content Here
+  </div>
+
+  {{>belowPart }}
+
+  <script>
+    // Ambil token dari cookie
+    const cookieToken = document.cookie.split('; ').find(row => row.startsWith('token='));
+
+    if (cookieToken) {
+      // Parse token dari cookie
+      const token = cookieToken.split('=')[1];
+
+      // Simpan token ke dalam localStorage
+      localStorage.setItem('jwtToken', token);
+
+      // Hapus token dari cookie (opsional)
+      document.cookie = 'token=; Max-Age=0;'; // Menetapkan waktu maksimum cookie ke 0 akan menghapusnya
+    }
+
+  </script>
+</body>
+
+</html>

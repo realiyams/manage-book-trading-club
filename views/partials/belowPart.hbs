@@ -1,0 +1,201 @@
+</div>
+<div class="drawer-side">
+  <label for="my-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
+  <!-- Sidebar content here -->
+  <ul class="menu p-4 pr-8 w-full sm:w-80 min-h-full bg-base-200 text-base-content">
+    <button id="close-drawer"
+      class="p-2 absolute top-0 right-0 mr-8 mt-4 text-white focus:outline-none rounded-full bg-red-500 hover:bg-red-400 glass">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+
+    <!-- Login / Nama User -->
+    {{#if isAuthenticated}}
+    <li class="mt-16 mb-2">
+      <p class="block py-4 px-4 text-white glass bg-teal-700 text-xl font-bold">Hello, {{user.username}}</p>
+    </li>
+    <li class="mt mb-2">
+      <div class="collapse p-0 collapse-arrow grid-cols-1 gap-0 hover:bg-cyan-500">
+        <input type="checkbox" />
+        <div class="collapse-title p-0 flex justify-between items-center glass">
+          <p class="block py-2 px-4 text-white "><i class="fa-solid fa-id-card-clip fa-lg"></i> My Profile</p>
+          <div class="collapse-arrow"></div>
+        </div>
+        <div class="collapse-content h-auto bg-base-100 hover:bg-base-100 border-b border-x border-cyan-500">
+          <ul class="ml-4 mt-4">
+            <li><a href="/profile" class="block py-2 px-4 text-white hover:bg-cyan-500"><i
+                  class="fa-solid fa-address-card fa-lg"></i> Profile</a></li>
+            <li><a href="/edit-profile" class="block py-2 px-4 text-white hover:bg-cyan-500"><i
+                  class="fa-solid fa-pen-to-square fa-lg"></i> Edit Profile</a>
+            </li>
+            <li><a href="/my-books" class="block py-2 px-4 text-white hover:bg-cyan-500"><i
+                  class="fa-solid fa-bookmark fa-lg"></i> My Books</a></li>
+            <li><a href="/logout" class="block py-2 px-4 text-white bg-red-500 hover:bg-red-400"><i
+                  class="fa-solid fa-right-from-bracket fa-lg"></i> Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </li>
+    {{else}}
+    <li class="mt-16 mb-2"><a href="/login"
+        class="block py-4 px-4 text-white glass hover:bg-cyan-500 border-b border-cyan-500"
+        ontouchstart="touchstart(event)"><i class="fa-solid fa-right-to-bracket fa-lg"></i> Login</a></li>
+    {{/if}}
+
+    <div class="divider divider-info m-0"></div>
+
+    <!-- Menu -->
+    <li class="mt-2">
+      <a href="/books" class="block py-4 px-4 text-white glass hover:bg-cyan-500 border-b border-cyan-500"
+        ontouchstart="touchstart(event)"><i class="fa-solid fa-book fa-lg"></i> Books</a>
+    </li>
+    <li class="mt-2">
+      <div class="collapse p-0 collapse-arrow grid-cols-1 gap-0 hover:bg-cyan-500" ontouchstart="touchstart(event)">
+        <input type="checkbox" />
+        <div class="collapse-title p-0 flex justify-between items-center glass">
+          <p class="block py-2 px-4 text-white "><i class="fa-solid fa-comment-dots fa-lg"></i> Request</p>
+          <div class="collapse-arrow"></div>
+        </div>
+        <div class="collapse-content h-auto bg-base-100 hover:bg-base-100 border-b border-x border-cyan-500">
+          <ul class="ml-4 mt-4">
+            <li><a href="/requests" class="block py-2 px-4 text-white hover:bg-cyan-500 hover:glass"><i
+                  class="fa-solid fa-layer-group fa-lg"></i> All
+                Request</a></li>
+            {{#if isAuthenticated}}
+            <li><a href="/create-request" class="block py-2 px-4 text-white hover:bg-cyan-500 hover:glass"><i
+                  class="fa-solid fa-square-plus fa-lg"></i> Create
+                Request</a></li>
+            {{/if}}
+          </ul>
+        </div>
+      </div>
+    </li>
+
+    <li class="mt-2"><a href="/trades"
+        class="block py-4 px-4 text-white glass hover:bg-cyan-500 border-b border-cyan-500"
+        ontouchstart="touchstart(event)"><i class="fa-solid fa-arrow-right-arrow-left fa-lg"></i> Trades</a>
+    </li>
+    <li class="mt-2 mb-2"><a href="/users"
+        class="block py-4 px-4 text-white glass hover:bg-cyan-500 border-b border-cyan-500"
+        ontouchstart="touchstart(event)"><i class="fa-solid fa-user fa-lg"></i> Users</a></li>
+
+  </ul>
+</div>
+</div>
+
+<script>
+  let scrollCount = 1;
+  let autohide = null;
+  let prevScrollpos = window.pageYOffset;
+
+  document.getElementById('my-drawer').addEventListener('click', () => {
+    if (autohide) {
+      clearInterval(autohide)
+    }
+  })
+
+  // Sembunyikan drawer saat tombol close ditekan
+  document.getElementById('close-drawer').addEventListener('click', function () {
+    document.getElementById('my-drawer').checked = false;
+    const navbarSticky = document.getElementById("navbar-sticky");
+    const navbarHeight = navbarSticky.clientHeight;
+    autohide = setInterval(() => {
+      navbarSticky.style.top = `-${navbarHeight}px`;
+      navbarSticky.style.transition = "top 0.3s ease-in-out";
+      scrollCount = 0;
+    }, 3000);
+  });
+
+  const navbarSticky = document.getElementById("navbar-sticky");
+  const navbarHeight = navbarSticky.clientHeight; // Mendapatkan tinggi navbar saat ini
+
+  const success_message = document.getElementById("success-message");
+  const success_delete = document.getElementById("success-delete");
+  const error_message = document.getElementById("error-message");
+
+  if (success_message)
+    success_message.style.transition = "top 0.3s ease-in-out";
+  if (success_delete)
+    success_delete.style.transition = "top 0.3s ease-in-out";
+  if (error_message)
+    error_message.style.transition = "top 0.3s ease-in-out";
+
+  if (success_message)
+    success_message.style.top = `${navbarHeight + 10}px`;
+  if (success_delete)
+    success_delete.style.top = `${navbarHeight + 10}px`;
+  if (error_message)
+    error_message.style.top = `${navbarHeight + 10}px`;
+
+  window.onscroll = function () {
+    const navbarHeight = navbarSticky.clientHeight; // Mendapatkan tinggi navbar saat ini
+    const scrollThreshold = 2; // Atur ambang batas jumlah scroll di sini
+    let currentScrollPos = window.pageYOffset;
+    let scrollDifference = currentScrollPos - prevScrollpos;
+
+    if (success_message)
+      success_message.style.top = `${parseFloat(navbarSticky.style.top) + navbarHeight + 10}px`;
+    if (success_delete)
+      success_delete.style.top = `${parseFloat(navbarSticky.style.top) + navbarHeight + 10}px`;
+    if (error_message)
+      error_message.style.top = `${parseFloat(navbarSticky.style.top) + navbarHeight + 10}px`;
+
+    if (scrollDifference < 0) {
+      // Scroll ke atas
+      scrollCount++;
+      if (scrollCount === scrollThreshold) {
+        // Jika scroll kedua, tampilkan navbar
+        clearInterval(autohide);
+        navbarSticky.style.top = "0";
+        navbarSticky.style.transition = "top 0.3s ease-in-out"; // Animasi muncul
+        autohide = setInterval(() => {
+          navbarSticky.style.top = `-${navbarHeight}px`;
+          navbarSticky.style.transition = "top 0.3s ease-in-out";
+          scrollCount = 0;
+        }, 3000);
+      }
+    } else {
+      // Scroll ke bawah
+      if (scrollCount > 0) {
+        // Jika sudah melakukan scroll ke atas sebelumnya
+        clearInterval(autohide);
+        navbarSticky.style.top = `-${navbarHeight}px`;
+        navbarSticky.style.transition = "top 0.3s ease-in-out"; // Animasi menghilang
+        scrollCount = 0; // Setel ulang scrollCount setelah navbar menghilang
+      }
+    }
+
+    prevScrollpos = currentScrollPos;
+  };
+
+
+  let prevTouch = null;
+
+  function touchstart(e) {
+    if (prevTouch === e.target) {
+      if (prevTouch.classList.contains('active')) {
+        prevTouch.classList.remove('active');
+      } else {
+        prevTouch.classList.add('active');
+      }
+    } else {
+      if (prevTouch) {
+        prevTouch.classList.remove('active');
+      }
+      prevTouch = e.target;
+      prevTouch.classList.add('active');
+    }
+  }
+
+  function Z_IndexChange() {
+    const message = document.getElementById('message')
+    if (message) message.style.zIndex = -10;
+  }
+
+  function Z_IndexDefault() {
+    const message = document.getElementById('message')
+    if (message) message.style.zIndex = 50;
+  }
+</script>
