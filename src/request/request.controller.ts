@@ -8,7 +8,7 @@ export class RequestController {
   @Get('create-request')
   getNewRequest(@Request() req, @Res() res) {
     if (!req.session.user) {
-      return res.redirect('/login'); // Redirect ke halaman login jika belum autentikasi
+      return res.redirect('/login');
     }
     
     return res.render('requests/createRequest', {
@@ -18,12 +18,26 @@ export class RequestController {
   }
 
   @Get('book/select-gives')
-  getSelectBookGives() {
+  @Render('requests/selectGives')
+  async getSelectBookGives(@Request() req) {
+    const user = req.session.user;
+    if (!user) {
+      return { redirect: '/login' };
+    }
+    const books = await this.requestService.getBooksOwnedByUser(user.id);
 
+    return { books, isAuthenticated: true, user };
   }
 
   @Get('book/select-takes')
-  getSelectBookTakes() {
-    
+  @Render('requests/selectTakes')
+  async getSelectBookTakes(@Request() req) {
+    const user = req.session.user;
+    if (!user) {
+      return { redirect: '/login' };
+    }
+    const books = await this.requestService.getAvailableBooksNotOwnedByUser(user.id);
+
+    return { books, isAuthenticated: true, user };
   }
 }

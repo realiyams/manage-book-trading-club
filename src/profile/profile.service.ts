@@ -1,16 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+
 import { User } from './../entities/user.entity';
-import { Book } from './../entities/book.entity'; // Import model Book jika belum diimpor
+import { Book } from './../entities/book.entity';
 
 @Injectable()
 export class ProfileService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
-    @InjectRepository(Book) // Inject repository untuk model Book
-    private bookRepository: Repository<Book>, // Menambah repository untuk model Book
+    @InjectRepository(Book)
+    private bookRepository: Repository<Book>,
   ) {}
 
   async getUserProfile(userId: number): Promise<User | undefined> {
