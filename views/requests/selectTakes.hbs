@@ -1,8 +1,16 @@
-<div class="book-list">
-  <h3>Available Books to Take</h3>
-  <ul>
-    {{#each books}}
-    <li>{{this.title}} by {{this.author}}</li>
-    {{/each}}
-  </ul>
-</div>
+<form action="/your-route-here" method="POST">
+  <div class="book-list">
+    <h3>Available Books to Take</h3>
+    <ul>
+      {{#each books}}
+      <li>
+        <label>
+          <input type="checkbox" name="selectedBooks[]" value="{{this.id}}">
+          {{this.title}} by {{this.author}}
+        </label>
+      </li>
+      {{/each}}
+    </ul>
+  </div>
+  <button type="submit">Submit Selected Books</button>
+</form>

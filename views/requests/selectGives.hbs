@@ -1,8 +1,16 @@
-<div class="book-list">
-  <h3>Your Books to Give</h3>
-  <ul>
-    {{#each books}}
-    <li>{{this.title}}</li>
-    {{/each}}
-  </ul>
-</div>
+<form action="/your-give-books-route" method="POST">
+  <div class="book-list">
+    <h3>Your Books to Give</h3>
+    <ul>
+      {{#each books}}
+      <li>
+        <label>
+          <input type="checkbox" name="selectedGiveBooks[]" value="{{this.id}}">
+          {{this.title}}
+        </label>
+      </li>
+      {{/each}}
+    </ul>
+  </div>
+  <button type="submit">Submit Selected Books to Give</button>
+</form>
