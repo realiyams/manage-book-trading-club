@@ -1,16 +1,92 @@
-<form action="/your-give-books-route" method="POST">
-  <div class="book-list">
-    <h3>Your Books to Give</h3>
-    <ul>
-      {{#each books}}
-      <li>
-        <label>
-          <input type="checkbox" name="selectedGiveBooks[]" value="{{this.id}}">
-          {{this.title}}
-        </label>
-      </li>
-      {{/each}}
-    </ul>
-  </div>
-  <button type="submit">Submit Selected Books to Give</button>
-</form>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Select Books To Give</title>
+  <link href="/css/styles.css" rel="stylesheet">
+  <link rel="stylesheet" href="/fontawesome-free-6.5.2-web/css/all.min.css">
+  <!-- Include Tailwind CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <!-- Include DaisyUI for additional components -->
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@1.11.4/dist/full.css" rel="stylesheet">
+
+  <style>
+    #main {
+      height: calc(100vh - 10rem);
+    }
+
+    .book-section {
+      flex: 1;
+      margin: 0 1rem;
+    }
+  </style>
+</head>
+
+<body class="w-full">
+  {{>upperPart }}
+  <form id="giveBookForm">
+    <div class="book-list">
+      <h3>Your Books to Give</h3>
+      <ul>
+        {{#each books}}
+        <li>
+          <label>
+            <input type="checkbox" name="selectedGiveBooks[]" value="{{this.id}}" data-title="{{this.title}}"
+              data-description="{{this.description}}">
+            {{this.title}} by {{../user.username}}
+          </label>
+        </li>
+        {{/each}}
+      </ul>
+    </div>
+    <button type="submit">Submit Selected Books to Give</button>
+  </form>
+
+  <script>
+    // Function to check previously selected books from localStorage
+    function loadSelectedGiveBooks() {
+      const selectedGiveBooks = JSON.parse(localStorage.getItem('selectedBooksToGive')) || [];
+
+      // Iterate through each selected book ID and check the corresponding checkbox
+      selectedGiveBooks.forEach(book => {
+        const checkbox = document.querySelector(`input[name="selectedGiveBooks[]"][value="${book.id}"]`);
+        if (checkbox) {
+          checkbox.checked = true; // Check the checkbox if it's part of the saved books
+        }
+      });
+    }
+
+    // Call the function after the DOM is loaded
+    document.addEventListener('DOMContentLoaded', function () {
+      loadSelectedGiveBooks();
+    });
+
+    document.getElementById('giveBookForm').addEventListener('submit', function (event) {
+      event.preventDefault(); // Prevent default form submission
+
+      // Array to store selected books
+      const selectedGiveBooks = [];
+
+      // Get all checked checkboxes
+      document.querySelectorAll('input[name="selectedGiveBooks[]"]:checked').forEach(checkbox => {
+        // Push the book data into the selectedGiveBooks array
+        selectedGiveBooks.push({
+          id: checkbox.value,
+          title: checkbox.getAttribute('data-title'),
+          description: checkbox.getAttribute('data-description')
+        });
+      });
+
+      // Store selected books in localStorage
+      localStorage.setItem('selectedBooksToGive', JSON.stringify(selectedGiveBooks));
+
+      // Optional: Redirect to another page if necessary
+      window.location.href = '/create-request';
+    });
+  </script>
+  {{>belowPart }}
+</body>
+
+</html>

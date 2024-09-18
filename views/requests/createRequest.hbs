@@ -27,7 +27,117 @@
 <body class="w-full">
   {{>upperPart }}
 
-<!--
+  <div id="main" class="flex justify-center items-center flex-col mx-5 my-5 lg:mx-auto lg:mt-10 lg:mb-0">
+    <div class="card !static bg-cyan-700 shadow-xl w-full sm:w-4/5 lg:h-auto lg:w-1/2 pb-3 lg:pb-0">
+      <div class="card-body p-4 lg:p-8 flex flex-col items-center w-full lg:justify-start lg:h-full lg:pl-8">
+        <div class="mb-2 lg:mb-0 w-full flex justify-center flex-col">
+          <h2 class="card-title text-white font-extrabold text-2xl justify-center mb-4 mt-2">
+            Create Trade Request
+          </h2>
+          <div class="divider divider-info m-0 w-full"></div>
+        </div>
+
+        <div class="flex flex-col lg:flex-row justify-center items-center w-full px-1 h-full">
+          <!-- Section for displaying selected books to give -->
+          <div class="book-section">
+            <h3 class="text-white font-medium">Books to Give:</h3>
+            <div id="booksToGive">
+              <a href="/book/select-gives" type="button" class="btn btn-outline btn-warning mt-2">Add Book to Give</a>
+            </div>
+          </div>
+
+          <!-- Section for displaying selected books to take -->
+          <div class="book-section">
+            <h3 class="text-white font-medium">Books to Take:</h3>
+            <div id="booksToTake">
+              <a href="/book/select-takes" type="button" class="btn btn-outline btn-warning mt-2">Add Book to Take</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-center items-center w-full">
+          <div class="card-actions mt-4">
+            <button id="submitRequestButton"
+              class="w-full btn bg-green-950 h-10 text-white font-extrabold py-2 px-8 glass">Submit Trade
+              Request</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script to load selected books from localStorage and display them -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Get selected books to give from localStorage
+      const booksToGive = JSON.parse(localStorage.getItem('selectedBooksToGive') || '[]');
+      const booksToGiveContainer = document.getElementById('booksToGive');
+
+      booksToGive.forEach(book => {
+        const bookElement = document.createElement('div');
+        bookElement.innerHTML = `
+          <p><strong>Title:</strong> ${book.title}</p>
+          <p><strong>Description:</strong> ${book.description}</p>
+        `;
+        booksToGiveContainer.appendChild(bookElement);
+      });
+
+      // Get the selected books from localStorage
+      const booksToTake = JSON.parse(localStorage.getItem('selectedBooksToTake')) || [];
+
+      const booksToTakeContainer = document.getElementById('booksToTake');
+
+      // Display each book and its giver's information
+      booksToTake.forEach(book => {
+        const bookElement = document.createElement('div');
+        bookElement.innerHTML = `
+          <p><strong>Title:</strong> ${book.title}</p>
+          <p><strong>Description:</strong> ${book.description}</p>
+          <p><strong>Giver:</strong> ${book.giver.username}, ${book.giver.city}, ${book.giver.state}</p>
+        `;
+        booksToTakeContainer.appendChild(bookElement);
+      });
+    });
+  </script>
+
+  {{>belowPart }}
+</body>
+
+</html>
+
+
+
+{{!--
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Trade Request</title>
+  <link href="/css/styles.css" rel="stylesheet">
+  <link rel="stylesheet" href="/fontawesome-free-6.5.2-web/css/all.min.css">
+  <!-- Include Tailwind CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <!-- Include DaisyUI for additional components -->
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@1.11.4/dist/full.css" rel="stylesheet">
+
+  <style>
+    #main {
+      height: calc(100vh - 10rem);
+    }
+
+    .book-section {
+      flex: 1;
+      margin: 0 1rem;
+    }
+  </style>
+</head>
+
+<body class="w-full">
+  {{>upperPart }}
+
+  <!--
   <div id="success-message" class="hidden fixed top-20 lg:top-24 inset-x-0 mx-auto w-full max-w-screen-md px-4 lg:z-50">
     <div role="alert"
       class="bg-green-500 text-white font-bold px-4 py-3 lg:py-2 rounded-md flex items-center justify-between shadow-md">
@@ -86,21 +196,25 @@
           <div class="book-section">
             <h3 class="text-white font-medium">Books to Give:</h3>
             <div id="booksToGive">
-              <a href="/book/select-gives" type="button" class="btn btn-outline btn-warning mt-2" onclick="addBookToGive()">Add Book to Give</a>
+              <a href="/book/select-gives" type="button" class="btn btn-outline btn-warning mt-2"
+                onclick="addBookToGive()">Add Book to Give</a>
             </div>
           </div>
 
           <div class="book-section">
             <h3 class="text-white font-medium">Books to Take:</h3>
             <div id="booksToTake">
-              <a href="/book/select-takes" type="button" class="btn btn-outline btn-warning mt-2" onclick="addBookToTake()">Add Book to Take</a>
+              <a href="/book/select-takes" type="button" class="btn btn-outline btn-warning mt-2"
+                onclick="addBookToTake()">Add Book to Take</a>
             </div>
           </div>
         </div>
 
         <div class="flex justify-center items-center w-full">
           <div class="card-actions mt-4">
-            <button id="submitRequestButton" class="w-full btn bg-green-950 h-10 text-white font-extrabold py-2 px-8 glass">Submit Trade Request</button>
+            <button id="submitRequestButton"
+              class="w-full btn bg-green-950 h-10 text-white font-extrabold py-2 px-8 glass">Submit Trade
+              Request</button>
           </div>
         </div>
 
@@ -109,7 +223,7 @@
     </div>
   </div>
 
-<!--
+  <!--
   <script>
     function addBookToGive() {
       const div = document.createElement('div');
@@ -137,4 +251,4 @@
 
 </body>
 
-</html>
+</html> --}}

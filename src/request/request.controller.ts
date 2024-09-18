@@ -25,7 +25,8 @@ export class RequestController {
       return { redirect: '/login' };
     }
     const books = await this.requestService.getBooksOwnedByUser(user.id);
-
+    console.log(books);
+    console.log(user);
     return { books, isAuthenticated: true, user };
   }
 
@@ -37,7 +38,7 @@ export class RequestController {
       return { redirect: '/login' };
     }
     const books = await this.requestService.getAvailableBooksNotOwnedByUser(user.id);
-
+    // console.log(books);
     return { books, isAuthenticated: true, user };
   }
 }
