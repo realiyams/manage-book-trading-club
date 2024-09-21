@@ -1,16 +1,16 @@
-import { Controller, Get, Render, Request, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, Render, Request, Res } from '@nestjs/common';
 import { RequestService } from './request.service';
 
 @Controller()
 export class RequestController {
-  constructor(private readonly requestService: RequestService) {}
+  constructor(private readonly requestService: RequestService) { }
 
   @Get('create-request')
   getNewRequest(@Request() req, @Res() res) {
     if (!req.session.user) {
       return res.redirect('/login');
     }
-    
+
     return res.render('requests/createRequest', {
       isAuthenticated: true,
       user: req.session.user,
@@ -40,5 +40,24 @@ export class RequestController {
     const books = await this.requestService.getAvailableBooksNotOwnedByUser(user.id);
     // console.log(books);
     return { books, isAuthenticated: true, user };
+  }
+
+  // New POST route to handle trade request submission
+  @Post('submit-trade-request')
+  async submitTradeRequest(@Body() body, @Request() req, @Res() res) {
+    const user = req.session.user;
+    if (!user) {
+      return res.redirect('/login');
+    }
+
+    // Log the data received from the client for debugging
+    console.log('Trade Request Data:', body);
+
+    // Return the submitted data for now, without saving it
+    return res.render('requests/tradeRequestResult', {
+      isAuthenticated: true,
+      user,
+      submittedData: body,
+    });
   }
 }
