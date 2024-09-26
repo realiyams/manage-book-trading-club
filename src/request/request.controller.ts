@@ -25,8 +25,6 @@ export class RequestController {
       return { redirect: '/login' };
     }
     const books = await this.requestService.getBooksOwnedByUser(user.id);
-    console.log(books);
-    console.log(user);
     return { books, isAuthenticated: true, user };
   }
 
@@ -38,11 +36,9 @@ export class RequestController {
       return { redirect: '/login' };
     }
     const books = await this.requestService.getAvailableBooksNotOwnedByUser(user.id);
-    // console.log(books);
     return { books, isAuthenticated: true, user };
   }
 
-  // New POST route to handle trade request submission
   @Post('submit-trade-request')
   async submitTradeRequest(@Body() body, @Request() req, @Res() res) {
     const user = req.session.user;
@@ -50,10 +46,11 @@ export class RequestController {
       return res.redirect('/login');
     }
 
-    // Log the data received from the client for debugging
-    console.log('Trade Request Data:', body);
+    const userId = user.id
+    const tradeRequestData = body
 
-    // Return the submitted data for now, without saving it
+    const requestbook = await this.requestService.createTradeRequest(userId, tradeRequestData);
+
     return res.render('requests/tradeRequestResult', {
       isAuthenticated: true,
       user,
