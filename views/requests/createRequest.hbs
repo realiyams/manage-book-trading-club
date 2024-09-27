@@ -108,6 +108,16 @@
       // Populate hidden fields with the JSON data for books to give and take
       document.getElementById('hiddenBooksToGive').value = JSON.stringify(booksToGive);
       document.getElementById('hiddenBooksToTake').value = JSON.stringify(booksToTake);
+
+      // Handle form submission
+      document.getElementById('tradeRequestForm').addEventListener('submit', function (event) {
+        // Clear localStorage for the selected books
+        localStorage.removeItem('selectedBooksToGive');
+        localStorage.removeItem('selectedBooksToTake');
+
+        // Optionally log or display a message confirming the localStorage was cleared
+        console.log('LocalStorage cleared');
+      });
     });
   </script>
 

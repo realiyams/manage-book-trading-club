@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Trade Requests</title>
+  <!-- Include your CSS and Font Awesome as needed -->
+  <link href="/css/styles.css" rel="stylesheet">
+  <link rel="stylesheet" href="/fontawesome-free-6.5.2-web/css/all.min.css">
+  <!-- Tailwind CSS for styling -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="w-full">
+  <!-- Include upper partial, if you have a navbar or header -->
+  {{>upperPart }}
+
+  <div class="container mx-auto my-8">
+    <h1 class="text-3xl font-bold mb-5 text-center">All Trade Requests</h1>
+
+    {{#if tradeRequests.length}}
+      <ul class="list-none">
+        {{#each tradeRequests}}
+        <li class="mb-6 p-4 border-b border-gray-300 shadow-md">
+          <h3 class="text-xl font-bold mb-2">Trade Request ID: {{this.id}}</h3>
+
+          <div class="mb-2">
+            <strong>Requester:</strong> {{this.requester.username}} <br>
+            <strong>Responder:</strong> {{this.responder.username}}
+          </div>
+
+          <div class="flex flex-col sm:flex-row sm:justify-between">
+            <!-- Offered Books -->
+            <div>
+              <h4 class="font-bold text-lg">Books to Give:</h4>
+              <ul>
+                {{#each this.offeredBooks}}
+                <li>{{this.title}} - {{this.description}}</li>
+                {{/each}}
+              </ul>
+            </div>
+
+            <!-- Requested Books -->
+            <div>
+              <h4 class="font-bold text-lg">Books to Take:</h4>
+              <ul>
+                {{#each this.requestedBooks}}
+                <li>{{this.title}} - {{this.description}}</li>
+                {{/each}}
+              </ul>
+            </div>
+          </div>
+
+          <p class="text-sm text-gray-500 mt-4">Date Submitted: {{this.createdAt}}</p>
+        </li>
+        {{/each}}
+      </ul>
+    {{else}}
+      <p class="text-center text-lg">No trade requests found.</p>
+    {{/if}}
+  </div>
+
+  <!-- Include lower partial, if you have a footer -->
+  {{>belowPart }}
+</body>
+</html>

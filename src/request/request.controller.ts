@@ -46,15 +46,30 @@ export class RequestController {
       return res.redirect('/login');
     }
 
-    const userId = user.id
-    const tradeRequestData = body
+    const userId = user.id;
+    const tradeRequestData = body;
 
-    const requestbook = await this.requestService.createTradeRequest(userId, tradeRequestData);
+    // Create the trade request
+    await this.requestService.createTradeRequest(userId, tradeRequestData);
 
-    return res.render('requests/tradeRequestResult', {
+    // Redirect to 'requests/allRequest.hbs'
+    return res.redirect('/requests');
+  }
+  @Get('requests')
+  async getAllRequests(@Request() req, @Res() res) {
+    const user = req.session.user;
+    if (!user) {
+      return res.redirect('/login');
+    }
+
+    // Fetch all trade requests related to the user (you can customize this logic)
+    const allRequests = await this.requestService.getAllTradeRequests();
+
+    // Render the 'requests/allRequest.hbs' view, passing user and request data
+    return res.render('requests/allRequest', {
       isAuthenticated: true,
       user,
-      submittedData: body,
+      tradeRequests: allRequests,
     });
   }
 }

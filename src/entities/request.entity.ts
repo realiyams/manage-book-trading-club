@@ -6,6 +6,8 @@ import {
   ManyToOne,
   JoinColumn,
   OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { User } from './user.entity';
 import { Book } from './book.entity';
@@ -31,4 +33,10 @@ export class TradeRequest {
 
   @Column({ default: false })
   isAccepted: boolean;
+
+  @CreateDateColumn({ type: 'datetime' })
+  createdAt: Date;  // Automatically records the creation date
+
+  @Column({ type: 'datetime', nullable: true })
+  respondedAt: Date | null;  // Records the response time, can be null if no response yet
 }
