@@ -9,6 +9,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
+
 import { User } from './user.entity';
 import { Book } from './book.entity';
 
@@ -35,8 +36,8 @@ export class TradeRequest {
   isAccepted: boolean;
 
   @CreateDateColumn({ type: 'datetime' })
-  createdAt: Date;  // Automatically records the creation date
+  createdAt: Date;
 
   @Column({ type: 'datetime', nullable: true })
-  respondedAt: Date | null;  // Records the response time, can be null if no response yet
+  respondedAt: Date | null; 
 }

@@ -13,32 +13,30 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ProfileService } from './profile.service';
+
 import { User } from './../entities/user.entity';
 import { Book } from './../entities/book.entity';
 
 @Controller()
 export class ProfileController {
-  constructor(private readonly profileService: ProfileService) {}
+  constructor(private readonly profileService: ProfileService) { }
 
   @Get('profile')
   @Render('profile/profile')
   async getUserProfile(@Request() req) {
-    // Cek apakah ada user yang di-set dalam sesi
     if (!req.session.user) {
-      throw new UnauthorizedException('Unauthorized'); // Jika tidak ada sesi, kirimkan unauthorized
+      throw new UnauthorizedException('Unauthorized');
     }
 
-    // Gunakan ProfileService untuk mendapatkan informasi pengguna
     const userId = req.session.user.id;
     const user = await this.profileService.getUserProfile(userId);
 
-    // Jika pengguna tidak ditemukan, kirimkan unauthorized
     if (!user) {
       throw new UnauthorizedException('Unauthorized');
     }
 
     return {
-      isAuthenticated: true, // Jika user ditemukan, set isAuthenticated menjadi true
+      isAuthenticated: true,
       user: user,
     };
   }
@@ -46,22 +44,19 @@ export class ProfileController {
   @Get('edit-profile')
   @Render('profile/edit')
   async getUserProfileEdit(@Request() req) {
-    // Cek apakah ada user yang di-set dalam sesi
     if (!req.session.user) {
-      throw new UnauthorizedException('Unauthorized'); // Jika tidak ada sesi, kirimkan unauthorized
+      throw new UnauthorizedException('Unauthorized');
     }
 
-    // Gunakan ProfileService untuk mendapatkan informasi pengguna
     const userId = req.session.user.id;
     const user = await this.profileService.getUserProfile(userId);
 
-    // Jika pengguna tidak ditemukan, kirimkan unauthorized
     if (!user) {
       throw new UnauthorizedException('Unauthorized');
     }
 
     return {
-      isAuthenticated: true, // Jika user ditemukan, set isAuthenticated menjadi true
+      isAuthenticated: true,
       user: user,
     };
   }
@@ -70,14 +65,12 @@ export class ProfileController {
   @UseGuards(AuthGuard('jwt'))
   async postEditProfile(@Body() userData: Partial<User>, @Request() req) {
     try {
-      const userId = req.session.user.id; // Mendapatkan userId dari sesi
+      const userId = req.session.user.id;
 
-      // Validasi data
       if (!userData.username.trim() || !userData.fullName.trim()) {
         throw new BadRequestException('Username and Full Name cannot be empty');
       }
 
-      // Panggil service untuk menyimpan data user ke dalam database
       const updatedUser = await this.profileService.updateUserProfile(
         userId,
         userData,
@@ -89,19 +82,15 @@ export class ProfileController {
     }
   }
 
-  // Implementasi route mybooks
   @Get('my-books')
   @Render('profile/mybooks')
   async getUserProfileMyBooks(@Request() req) {
-    // Pastikan ada user yang di-set dalam sesi
     if (!req.session.user) {
       throw new UnauthorizedException('Unauthorized');
     }
 
-    // Kosongkan flash messages
-    req.flash(); // Jangan memberikan argumen apa pun untuk mengosongkan semua pesan flash
+    req.flash();
 
-    // Gunakan ProfileService untuk mendapatkan informasi buku dari user
     const userId = req.session.user.id;
     const user = await this.profileService.getUserProfile(userId);
     const userBooks = await this.profileService.getUserBooks(userId);
@@ -119,14 +108,12 @@ export class ProfileController {
   @UseGuards(AuthGuard('jwt'))
   async addBookToUserProfile(@Body() bookData: Partial<Book>, @Request() req) {
     try {
-      const userId = req.session.user.id; // Mendapatkan userId dari sesi
+      const userId = req.session.user.id;
 
-      // Validasi data buku
       if (!bookData.title.trim() || !bookData.description.trim()) {
         throw new BadRequestException('Title and Author cannot be empty');
       }
 
-      // Panggil service untuk menambahkan buku ke daftar buku user
       const addedBook = await this.profileService.addBookToUser(
         userId,
         bookData,
@@ -145,7 +132,7 @@ export class ProfileController {
     @Request() req,
   ) {
     try {
-      const userId = req.session.user.id; // Mendapatkan userId dari sesi
+      const userId = req.session.user.id;
 
       await this.profileService.deleteBookFromUser(userId, bookId);
       req.flash('success', 'Book deleted successfully!');

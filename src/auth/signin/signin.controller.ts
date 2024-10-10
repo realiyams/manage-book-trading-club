@@ -2,8 +2,9 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable prettier/prettier */
 import { Controller, Get, Post, Body, Request, Res } from '@nestjs/common';
-import { SigninService } from './signin.service'; 
 import { Response } from 'express';
+
+import { SigninService } from './signin.service';
 
 @Controller()
 export class SigninController {
@@ -11,12 +12,9 @@ export class SigninController {
 
   @Get('signin')
   async getSignin(@Request() req, @Res() res) {
-    // Periksa apakah pengguna sudah login
     if (req.session.user) {
-      // Pengguna sudah login, alihkan ke halaman utama
       return res.redirect('/');
     }
-    // Pengguna belum login, tampilkan halaman login
     res.render('signin');
   }
 
@@ -34,7 +32,7 @@ export class SigninController {
     } catch (error) {
       console.log(error);
       req.flash('error', 'Error! Username has already been taken');
-      res.redirect('/signin'); // Redirect ke halaman signup jika username sudah ada
+      res.redirect('/signin');
     }
   }
 }

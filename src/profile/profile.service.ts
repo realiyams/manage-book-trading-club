@@ -28,14 +28,13 @@ export class ProfileService {
       throw new Error('User not found');
     }
 
-    // Mengembalikan user yang diperbarui
     return this.userRepository.findOne({ where: { id: userId } });
   }
 
   async getUserBooks(userId: number): Promise<Book[]> {
     const user = await this.userRepository.findOne({
       where: { id: userId },
-      relations: ['books', 'books.receiver'], // Pastikan "books" adalah nama relasi pada entitas User
+      relations: ['books', 'books.receiver'],
     });
 
     if (!user) {
@@ -52,12 +51,12 @@ export class ProfileService {
       throw new Error('User not found');
     }
 
-    const newBook = this.bookRepository.create(bookData); // Menggunakan repository Book untuk membuat buku baru
-    newBook.giver = user; // Menetapkan pengguna untuk buku baru
+    const newBook = this.bookRepository.create(bookData);
+    newBook.giver = user;
     newBook.receiver = null;
     newBook.isAvailable = true;
 
-    await this.bookRepository.save(newBook); // Menyimpan buku baru ke dalam database
+    await this.bookRepository.save(newBook);
 
     return newBook;
   }

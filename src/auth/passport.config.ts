@@ -1,18 +1,16 @@
 /* eslint-disable prettier/prettier */
-// auth/passport.config.ts
-
 import { PassportStatic } from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import { Injectable } from '@nestjs/common';
+
 import { AuthService } from './auth.service';
 
 @Injectable()
 export class PassportConfig {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   public configure(passport: PassportStatic) {
-    // Konfigurasi PassportStrategy lokal
     passport.use(
       new LocalStrategy(async (username, password, done) => {
         try {
@@ -29,7 +27,6 @@ export class PassportConfig {
       }),
     );
 
-    // Konfigurasi PassportStrategy JWT
     passport.use(
       new JwtStrategy(
         {
@@ -50,12 +47,10 @@ export class PassportConfig {
       ),
     );
 
-    // Serialize user
     passport.serializeUser((user: any, done) => {
       done(null, user.id);
     });
 
-    // Deserialize user
     passport.deserializeUser(async (id: number, done) => {
       try {
         const user = await this.authService.findById(id);

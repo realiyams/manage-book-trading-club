@@ -20,4 +20,4 @@ import { Book } from './../entities/book.entity';
   controllers: [ProfileController],
   providers: [ProfileService],
 })
-export class ProfileModule {}
+export class ProfileModule { }

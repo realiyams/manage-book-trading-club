@@ -2,23 +2,23 @@
 import { DataSource } from 'typeorm';
 import { Global, Module } from '@nestjs/common';
 
-@Global() // makes the module available globally for other modules once imported in the app modules
+@Global()
 @Module({
   imports: [],
   providers: [
     {
-      provide: DataSource, // add the datasource as a provider
+      provide: DataSource,
       inject: [],
-      useFactory: async (): Promise <DataSource> => {
-        // using the factory function to create the datasource instance
+      useFactory: async (): Promise<DataSource> => {
+        
         try {
           const dataSource = new DataSource({
             type: 'sqlite',
             database: 'database/database.sqlite',
             synchronize: true,
-            entities: [`${__dirname}/../**/**.entity{.ts,.js}`], // this will automatically load all entity file in the src folder
+            entities: [`${__dirname}/../**/**.entity{.ts,.js}`], 
           });
-          await dataSource.initialize(); // initialize the data source
+          await dataSource.initialize();
           console.log('Database connected successfully');
           return dataSource;
         } catch (error) {
@@ -28,6 +28,6 @@ import { Global, Module } from '@nestjs/common';
       },
     },
   ],
-  exports: [DataSource],  
+  exports: [DataSource],
 })
-export class TypeOrmModule {}
+export class TypeOrmModule { }

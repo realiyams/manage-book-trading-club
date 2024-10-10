@@ -7,6 +7,7 @@
 import { Controller, Get, Post, Render, Request, Res } from '@nestjs/common';
 import * as passport from 'passport';
 import * as jwt from 'jsonwebtoken';
+
 import { AuthService } from './auth.service';
 
 @Controller()
@@ -46,11 +47,10 @@ export class LoginController {
           req.flash('error', 'Error! Wrong username or password');
           return res.redirect('/login');
         }
-        // Authentication successful, create JWT token
+
         const token = jwt.sign({ userId: user.id }, 'supersecretjwt', { expiresIn: '1h' });
 
-        // Set token as cookie
-        res.cookie('token', token); // Setelah ini, token akan otomatis dikirim ke klien dalam setiap request
+        res.cookie('token', token);
         req.session.user = {
           id: user.id,
           username: user.username,
@@ -67,15 +67,12 @@ export class LoginController {
     }
   } 
 
-  // Endpoint untuk logout
   @Get('logout')
   logout(@Request() req, @Res() res) {
-    // Hapus session user
     req.session.destroy((err: any) => {
       if (err) {
         return res.status(500).send('Failed to logout');
       }
-      // Redirect ke halaman login atau halaman lainnya setelah logout
       res.redirect('/');
     });
   }

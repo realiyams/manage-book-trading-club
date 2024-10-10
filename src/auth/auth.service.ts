@@ -1,13 +1,11 @@
 /* eslint-disable prettier/prettier */
-// auth/auth.service.ts
-
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-
 import * as bcrypt from 'bcrypt';
 
 import { MyJwtService } from './jwt/jwt.service';
+
 import { User } from './../entities/user.entity';
 
 @Injectable()
@@ -16,11 +14,9 @@ export class AuthService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly jwtService: MyJwtService
-  ) {}
+  ) { }
 
   async login(user: any): Promise<{ token: string }> {
-    // Lakukan validasi pengguna di sini
-    // Jika valid, hasilkan token JWT
     const token = this.jwtService.generateToken({ sub: user.id });
     return { token };
   }
@@ -30,10 +26,10 @@ export class AuthService {
     if (user) {
       const isValidPassword = await bcrypt.compare(password, user.password);
       if (isValidPassword) {
-        return user; // Pengguna valid
+        return user;
       }
     }
-    return null; // Tidak ada pengguna yang valid
+    return null;
   }
 
   async findById(id: number): Promise<User | null> {

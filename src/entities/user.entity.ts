@@ -1,9 +1,7 @@
 /* eslint-disable prettier/prettier */
-// src/entities/user.entity.ts
 /* eslint-disable @typescript-eslint/no-var-requires */
-
-// user.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+
 import { Book } from './book.entity';
 import { TradeRequest } from './request.entity';
 
