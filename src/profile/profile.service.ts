@@ -12,7 +12,7 @@ export class ProfileService {
     private userRepository: Repository<User>,
     @InjectRepository(Book)
     private bookRepository: Repository<Book>,
-  ) {}
+  ) { }
 
   async getUserProfile(userId: number): Promise<User | undefined> {
     return this.userRepository.findOne({ where: { id: userId } });
@@ -35,7 +35,7 @@ export class ProfileService {
   async getUserBooks(userId: number): Promise<Book[]> {
     const user = await this.userRepository.findOne({
       where: { id: userId },
-      relations: ['books'], // Pastikan "books" adalah nama relasi pada entitas User
+      relations: ['books', 'books.receiver'], // Pastikan "books" adalah nama relasi pada entitas User
     });
 
     if (!user) {

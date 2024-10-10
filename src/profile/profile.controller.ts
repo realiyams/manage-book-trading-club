@@ -106,6 +106,8 @@ export class ProfileController {
     const user = await this.profileService.getUserProfile(userId);
     const userBooks = await this.profileService.getUserBooks(userId);
 
+    console.log(userBooks);
+
     return {
       isAuthenticated: true,
       user: user,

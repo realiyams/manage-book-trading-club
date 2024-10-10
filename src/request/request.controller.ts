@@ -58,18 +58,64 @@ export class RequestController {
   @Get('requests')
   async getAllRequests(@Request() req, @Res() res) {
     const user = req.session.user;
-    if (!user) {
-      return res.redirect('/login');
-    }
-
     // Fetch all trade requests related to the user (you can customize this logic)
     const allRequests = await this.requestService.getAllTradeRequests();
-
+    
+    if (!user) {
+      return res.render('requests/allRequest', {
+        tradeRequests: allRequests,
+      });
+    }
     // Render the 'requests/allRequest.hbs' view, passing user and request data
     return res.render('requests/allRequest', {
       isAuthenticated: true,
       user,
       tradeRequests: allRequests,
     });
+  }
+
+  @Get('respond-requests')
+  async getRespondRequests(@Request() req, @Res() res) {
+    const user = req.session.user;
+    if (!user) {
+      return res.redirect('/login');
+    }
+
+    const respondRequests = await this.requestService.getRespondRequests(user.id);
+    console.log(respondRequests);
+
+    return res.render('requests/respondRequest', {
+      isAuthenticated: true,
+      user,
+      respondRequests,
+    });
+  }
+
+  @Post('requests/accept')
+  async acceptTradeRequest(@Body('tradeRequestId') tradeRequestId: number, @Request() req, @Res() res) {
+    const user = req.session.user;
+    if (!user) {
+      return res.redirect('/login');
+    }
+
+    // Handle the logic for accepting the trade request
+    await this.requestService.acceptTradeRequest(tradeRequestId, user.id);
+
+    // Redirect to the response page after action
+    return res.redirect('/respond-requests');
+  }
+
+  @Post('requests/reject')
+  async rejectTradeRequest(@Body('tradeRequestId') tradeRequestId: number, @Request() req, @Res() res) {
+    const user = req.session.user;
+    if (!user) {
+      return res.redirect('/login');
+    }
+
+    // Handle the logic for rejecting the trade request
+    await this.requestService.rejectTradeRequest(tradeRequestId, user.id);
+
+    // Redirect to the response page after action
+    return res.redirect('/respond-requests');
   }
 }

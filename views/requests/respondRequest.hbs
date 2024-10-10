@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Respond to Trade Requests</title>
+  <link rel="stylesheet" href="/styles.css"> <!-- Add your styles here -->
+</head>
+
+<body>
+  <header>
+    <h1>Respond to Trade Requests</h1>
+  </header>
+
+  {{#if isAuthenticated}}
+  <div class="user-info">
+    <p>Logged in as: {{user.username}}</p>
+    <a href="/logout">Logout</a>
+  </div>
+  {{/if}}
+
+  {{#if respondRequests.length}}
+  <div class="trade-requests-list">
+    {{#each respondRequests}}
+    <div class="trade-request-item">
+      <h2>Trade Request from {{this.requester.username}}</h2>
+
+      <h3>Books Offered to You:</h3>
+      <ul>
+        {{#each this.offeredBooks}}
+        <li>{{this.title}} by {{this.giver}}</li>
+        {{/each}}
+      </ul>
+
+      <h3>Books Requested from You:</h3>
+      <ul>
+        {{#each this.requestedBooks}}
+        <li>{{this.title}} by {{this.author}}</li>
+        {{/each}}
+      </ul>
+
+      <!-- Accept Form -->
+      <form action="/requests/accept" method="POST">
+        <input type="hidden" name="tradeRequestId" value="{{this.id}}">
+        <button type="submit" class="btn accept-btn">Accept</button>
+      </form>
+
+      <!-- Reject Form -->
+      <form action="/requests/reject" method="POST">
+        <input type="hidden" name="tradeRequestId" value="{{this.id}}">
+        <button type="submit" class="btn reject-btn">Reject</button>
+      </form>
+    </div>
+    {{/each}}
+  </div>
+  {{else}}
+  <p>No trade requests to respond to.</p>
+  {{/if}}
+
+</body>
+
+</html>

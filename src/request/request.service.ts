@@ -69,4 +69,56 @@ export class RequestService {
     });
   }
 
+  // New method to get "respond requests"
+  async getRespondRequests(userId: number): Promise<TradeRequest[]> {
+    return this.tradeRequestRepository.find({
+      where: {
+        responder: { id: userId },
+      },
+      relations: ['requester', 'responder', 'offeredBooks', 'requestedBooks'],
+    });
+  }
+
+  async acceptTradeRequest(tradeRequestId: number, responderId: number): Promise<void> {
+    const tradeRequest = await this.tradeRequestRepository.findOne({
+      where: { id: tradeRequestId, responder: { id: responderId } },
+      relations: ['requester', 'responder', 'offeredBooks', 'requestedBooks'],
+    });
+
+    if (!tradeRequest) {
+      throw new Error('Trade request not found or unauthorized');
+    }
+
+    tradeRequest.isAccepted = true;
+    tradeRequest.respondedAt = new Date();
+
+    // Update offered books - mark them as unavailable and set the receiver
+    await Promise.all(tradeRequest.offeredBooks.map(async (book) => {
+      book.isAvailable = false;
+      book.receiver = tradeRequest.responder; // Set the responder as the receiver
+      return this.bookRepository.save(book);
+    }));
+
+    // Update requested books - mark them as unavailable and set the receiver
+    await Promise.all(tradeRequest.requestedBooks.map(async (book) => {
+      book.isAvailable = false;
+      book.receiver = tradeRequest.requester; // Set the requester as the receiver
+      return this.bookRepository.save(book);
+    }));
+
+    await this.tradeRequestRepository.save(tradeRequest);
+  }
+
+  async rejectTradeRequest(tradeRequestId: number, responderId: number): Promise<void> {
+    const tradeRequest = await this.tradeRequestRepository.findOne({
+      where: { id: tradeRequestId, responder: { id: responderId } },
+    });
+
+    if (!tradeRequest) {
+      throw new Error('Trade request not found or unauthorized');
+    }
+
+    tradeRequest.respondedAt = new Date();
+    await this.tradeRequestRepository.remove(tradeRequest); // Delete the trade request on reject
+  }
 }
