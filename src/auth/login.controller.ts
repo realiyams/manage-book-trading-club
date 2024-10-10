@@ -19,21 +19,21 @@ export class LoginController {
       return res.redirect('/');
     }
 
-    if (req.hostname === 'localhost') {
-      const adminUser = await this.authService.findAdminUser();
-      if (adminUser) {
-        const token = jwt.sign({ userId: adminUser.id }, 'supersecretjwt', { expiresIn: '1h' });
-        res.cookie('token', token);
-        req.session.user = {
-          id: adminUser.id,
-          username: adminUser.username,
-          fullName: adminUser.fullName,
-        };
-        return res.redirect('/');
-      } else {
-        return res.status(500).send('Admin user not found');
-      }
-    }
+    // if (req.hostname === 'localhost') {
+    //   const adminUser = await this.authService.findAdminUser();
+    //   if (adminUser) {
+    //     const token = jwt.sign({ userId: adminUser.id }, 'supersecretjwt', { expiresIn: '1h' });
+    //     res.cookie('token', token);
+    //     req.session.user = {
+    //       id: adminUser.id,
+    //       username: adminUser.username,
+    //       fullName: adminUser.fullName,
+    //     };
+    //     return res.redirect('/');
+    //   } else {
+    //     return res.status(500).send('Admin user not found');
+    //   }
+    // }
 
     res.render('login');
   }
