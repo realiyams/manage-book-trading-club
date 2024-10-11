@@ -1,0 +1,54 @@
+<!-- views/trades.hbs -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accepted Trades</title>
+</head>
+
+<body>
+  <h1>Accepted Trade Requests</h1>
+
+  {{#if trades.length}}
+  <table>
+    <thead>
+      <tr>
+        <th>Requester</th>
+        <th>Responder</th>
+        <th>Requested Books</th>
+        <th>Offered Books</th>
+        <th>Created At</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each trades}}
+      <tr>
+        <td>{{this.requester.fullName}}</td>
+        <td>{{this.responder.fullName}}</td>
+        <td>
+          <ul>
+            {{#each this.requestedBooks}}
+            <li>{{this.title}}: {{this.description}}</li>
+            {{/each}}
+          </ul>
+        </td>
+        <td>
+          <ul>
+            {{#each this.offeredBooks}}
+            <li>{{this.title}}: {{this.description}}</li>
+            {{/each}}
+          </ul>
+        </td>
+        <td>{{this.createdAt}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  {{else}}
+  <p>No accepted trades available.</p>
+  {{/if}}
+</body>
+
+</html>
