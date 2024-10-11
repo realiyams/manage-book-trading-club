@@ -26,10 +26,10 @@ export class TradeRequest {
   @JoinColumn({ name: 'responder_id' })
   responder: User;
 
-  @OneToMany(() => Book, (book) => book.tradeRequestAsRequested)
+  @OneToMany(() => Book, (book) => book.tradeRequestAsRequested, { cascade: true })
   requestedBooks: Book[];
 
-  @OneToMany(() => Book, (book) => book.tradeRequestAsOffered)
+  @OneToMany(() => Book, (book) => book.tradeRequestAsOffered, { cascade: true })
   offeredBooks: Book[];
 
   @Column({ default: false })
@@ -39,5 +39,5 @@ export class TradeRequest {
   createdAt: Date;
 
   @Column({ type: 'datetime', nullable: true })
-  respondedAt: Date | null; 
+  respondedAt: Date | null;
 }

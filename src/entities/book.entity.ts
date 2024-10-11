@@ -34,11 +34,11 @@ export class Book {
   isAvailable: boolean;
 
   @ManyToOne(() => TradeRequest, tradeRequest => tradeRequest.requestedBooks, { nullable: true })
-  @JoinColumn({ name: 'trade_request_id' })
+  @JoinColumn({ name: 'trade_request_as_requested_id' }) // <-- Changed column name
   tradeRequestAsRequested: TradeRequest | null;
 
   @ManyToOne(() => TradeRequest, tradeRequest => tradeRequest.offeredBooks, { nullable: true })
-  @JoinColumn({ name: 'trade_request_id' })
+  @JoinColumn({ name: 'trade_request_as_offered_id' }) // <-- Changed column name
   tradeRequestAsOffered: TradeRequest | null;
 }
 

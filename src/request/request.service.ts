@@ -19,7 +19,10 @@ export class RequestService {
 
   async getBooksOwnedByUser(userId: number): Promise<Book[]> {
     return this.bookRepository.find({
-      where: { giver: { id: userId } },
+      where: {
+        giver: { id: userId },
+        isAvailable: true
+      },
     });
   }
 
@@ -39,29 +42,54 @@ export class RequestService {
       return book;
     });
   }
-  async createTradeRequest(userId: number, tradeRequestData: any): Promise<TradeRequest> {
 
+  async createTradeRequest(userId: number, tradeRequestData: any): Promise<TradeRequest> {
     const booksToGive = JSON.parse(tradeRequestData.booksToGive);
     const booksToTake = JSON.parse(tradeRequestData.booksToTake);
 
     const requester = await this.userRepository.findOne({ where: { id: userId } });
     const responder = await this.userRepository.findOne({ where: { id: booksToTake[0].giver.id } });
 
+    if (!requester || !responder) {
+      throw new Error('Requester or Responder not found');
+    }
+
     const tradeRequest = new TradeRequest();
     tradeRequest.requester = requester;
     tradeRequest.responder = responder;
     tradeRequest.isAccepted = false;
 
-    tradeRequest.offeredBooks = await this.bookRepository.findBy({
-      id: In(booksToGive.map((book: { id: any; }) => book.id)),
+    // Find and update the books to give and take
+    const offeredBooks = await this.bookRepository.findBy({
+      id: In(booksToGive.map((book: { id: any }) => book.id)),
     });
 
-    tradeRequest.requestedBooks = await this.bookRepository.findBy({
-      id: In(booksToTake.map((book: { id: any; }) => book.id)),
+    const requestedBooks = await this.bookRepository.findBy({
+      id: In(booksToTake.map((book: { id: any }) => book.id)),
     });
+
+    // Set the relation between the books and the trade request
+    offeredBooks.forEach(book => {
+      book.tradeRequestAsOffered = tradeRequest;
+      book.isAvailable = false;
+    });
+
+    requestedBooks.forEach(book => {
+      book.tradeRequestAsRequested = tradeRequest;
+      book.isAvailable = false;
+    });
+
+    // Save the books first
+    await this.bookRepository.save(offeredBooks);
+    await this.bookRepository.save(requestedBooks);
+
+    // Now save the trade request
+    tradeRequest.offeredBooks = offeredBooks;
+    tradeRequest.requestedBooks = requestedBooks;
 
     return this.tradeRequestRepository.save(tradeRequest);
   }
+
 
   async getAllTradeRequests(): Promise<TradeRequest[]> {
     return this.tradeRequestRepository.find({

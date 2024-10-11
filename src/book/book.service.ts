@@ -13,7 +13,7 @@ export class BookService {
 
   async findAllAvailableBooks(): Promise<Book[]> {
     return this.bookRepository.find({
-      where: { isAvailable: true, receiver: IsNull(), },
+      where: { isAvailable: true, receiver: IsNull() },
       relations: ['giver', 'receiver', 'tradeRequestAsRequested', 'tradeRequestAsOffered'],
     });
   }

@@ -5,6 +5,27 @@ import { RequestService } from './request.service';
 export class RequestController {
   constructor(private readonly requestService: RequestService) { }
 
+  @Get('requests')
+  async getAllRequests(@Request() req, @Res() res) {
+    const user = req.session.user;
+    // Fetch all trade requests related to the user (you can customize this logic)
+    const allRequests = await this.requestService.getAllTradeRequests();
+    
+    console.log(JSON.stringify(allRequests));
+
+    if (!user) {
+      return res.render('requests/allRequest', {
+        tradeRequests: allRequests,
+      });
+    }
+    // Render the 'requests/allRequest.hbs' view, passing user and request data
+    return res.render('requests/allRequest', {
+      isAuthenticated: true,
+      user,
+      tradeRequests: allRequests,
+    });
+  }
+
   @Get('create-request')
   getNewRequest(@Request() req, @Res() res) {
     if (!req.session.user) {
@@ -49,29 +70,14 @@ export class RequestController {
     const userId = user.id;
     const tradeRequestData = body;
 
+    // console.log(userId)
+    // console.log(tradeRequestData)
+
     // Create the trade request
     await this.requestService.createTradeRequest(userId, tradeRequestData);
 
     // Redirect to 'requests/allRequest.hbs'
     return res.redirect('/requests');
-  }
-  @Get('requests')
-  async getAllRequests(@Request() req, @Res() res) {
-    const user = req.session.user;
-    // Fetch all trade requests related to the user (you can customize this logic)
-    const allRequests = await this.requestService.getAllTradeRequests();
-    
-    if (!user) {
-      return res.render('requests/allRequest', {
-        tradeRequests: allRequests,
-      });
-    }
-    // Render the 'requests/allRequest.hbs' view, passing user and request data
-    return res.render('requests/allRequest', {
-      isAuthenticated: true,
-      user,
-      tradeRequests: allRequests,
-    });
   }
 
   @Get('respond-requests')

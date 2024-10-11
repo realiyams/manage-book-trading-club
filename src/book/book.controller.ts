@@ -4,7 +4,7 @@ import { BookService } from './book.service';
 
 @Controller()
 export class BookController {
-  constructor(private readonly bookService: BookService) {}
+  constructor(private readonly bookService: BookService) { }
 
   @Get('books')
   @Render('books/book')
