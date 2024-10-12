@@ -12,6 +12,13 @@ export class UsersService {
   ) {}
 
   async findAll(): Promise<User[]> {
-    return await this.userRepository.find();
+    return await this.userRepository.find({
+      relations: ['books', 'receivedTradeRequests'], // Load related books and receivedTradeRequests
+      where: {
+        books: {
+          isAvailable: true, // Filter books where isAvailable is true
+        },
+      },
+    });
   }
 }

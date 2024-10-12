@@ -34,7 +34,7 @@ export class ProfileService {
   async getUserBooks(userId: number): Promise<Book[]> {
     const user = await this.userRepository.findOne({
       where: { id: userId },
-      relations: ['books', 'books.receiver'],
+      relations: ['books', 'books.receiver', 'books.tradeRequestAsRequested'],
     });
 
     if (!user) {

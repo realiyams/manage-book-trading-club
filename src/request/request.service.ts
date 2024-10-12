@@ -140,13 +140,30 @@ export class RequestService {
   async rejectTradeRequest(tradeRequestId: number, responderId: number): Promise<void> {
     const tradeRequest = await this.tradeRequestRepository.findOne({
       where: { id: tradeRequestId, responder: { id: responderId } },
+      relations: ['offeredBooks', 'requestedBooks'], // Load related books
     });
 
     if (!tradeRequest) {
       throw new Error('Trade request not found or unauthorized');
     }
 
+    // Set the offered books' `isAvailable` back to true
+    await Promise.all(tradeRequest.offeredBooks.map(async (book) => {
+      book.isAvailable = true;
+      book.tradeRequestAsOffered = null; // Clear the association with the trade request
+      return this.bookRepository.save(book);
+    }));
+
+    // Set the requested books' `isAvailable` back to true
+    await Promise.all(tradeRequest.requestedBooks.map(async (book) => {
+      book.isAvailable = true;
+      book.tradeRequestAsRequested = null; // Clear the association with the trade request
+      return this.bookRepository.save(book);
+    }));
+
     tradeRequest.respondedAt = new Date();
-    await this.tradeRequestRepository.remove(tradeRequest); // Delete the trade request on reject
+
+    // Finally, remove the trade request
+    await this.tradeRequestRepository.remove(tradeRequest);
   }
 }
