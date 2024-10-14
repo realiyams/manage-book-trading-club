@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,55 +13,92 @@
 </head>
 
 <body class="w-full">
-  <!-- Include upper partial, if you have a navbar or header -->
   {{>upperPart }}
 
-  <div class="container mx-auto my-8">
+  <div class="container mx-auto my-8 px-4">
     <h1 class="text-3xl font-bold mb-5 text-center">All Trade Requests</h1>
 
     {{#if tradeRequests.length}}
-      <ul class="list-none">
-        {{#each tradeRequests}}
-        <li class="mb-6 p-4 border-b border-gray-300 shadow-md">
-          <h3 class="text-xl font-bold mb-2">Trade Request ID: {{this.id}}</h3>
+    <div id="trade-requests-list" class="flex flex-wrap justify-center">
+      {{#each tradeRequests}}
+      <div class="card !static bg-cyan-700 text-white shadow-xl w-full sm:w-4/5 lg:w-3/5 mb-6 p-4 lg:p-6 rounded-lg">
+        <div class="card-body">
+          <!-- Trade Request Title with Icon -->
+          <h3 class="card-title text-2xl font-extrabold mb-4 text-center lg:text-left">
+            <i class="fas fa-exchange-alt mr-2"></i> Trade Request: {{this.id}}
+          </h3>
 
-          <div class="mb-2">
-            <strong>Requester:</strong> {{this.requester.username}} <br>
-            <strong>Responder:</strong> {{this.responder.username}}
+          <!-- Requester and Responder with Icons -->
+          <div class="mb-4">
+            <p class="text-lg text-left">
+              <i class="fas fa-user mr-2"></i> <strong>Requester:</strong> {{this.requester.username}}
+            </p>
+            <p class="text-lg text-left">
+              <i class="fas fa-user-check"></i> <strong>Responder:</strong> {{this.responder.username}}
+            </p>
           </div>
 
-          <div class="flex flex-col sm:flex-row sm:justify-between">
-            <!-- Offered Books -->
-            <div>
-              <h4 class="font-bold text-lg">Books to Give:</h4>
-              <ul>
+          <!-- Books to Give and Take -->
+          <div class="flex flex-col lg:flex-row lg:justify-between">
+            <!-- Offered Books with Icon -->
+            <div class="mb-4 lg:mb-0 w-full lg:w-1/2 lg:pr-4">
+              <h4 class="text-lg font-bold mb-2 text-left">
+                Books to Give:
+              </h4>
+              <ul class="list-none">
                 {{#each this.offeredBooks}}
-                <li>{{this.title}} - {{this.description}}</li>
+                <li class="mb-1 text-left">
+                  <i class="fas fa-book mr-2"></i><span class="font-bold">{{this.title}}</span>
+                  <br>
+                  <span class="font-light text-sm ml-8">{{this.description}}</span>
+                </li>
                 {{/each}}
               </ul>
             </div>
 
-            <!-- Requested Books -->
-            <div>
-              <h4 class="font-bold text-lg">Books to Take:</h4>
-              <ul>
+            <!-- Requested Books with Icon -->
+            <div class="w-full lg:w-1/2 lg:pl-4">
+              <h4 class="text-lg font-bold mb-2 text-left">
+                Books to Take:
+              </h4>
+              <ul class="list-none">
                 {{#each this.requestedBooks}}
-                <li>{{this.title}} - {{this.description}}</li>
+                <li class="mb-1 text-left">
+                  <i class="fas fa-book mr-2"></i><span class="font-bold">{{this.title}}</span>
+                  <br>
+                  <span class="font-light text-sm ml-8">{{this.description}}</span>
+                </li>
                 {{/each}}
               </ul>
             </div>
           </div>
 
-          <p class="text-sm text-gray-500 mt-4">Date Submitted: {{this.createdAt}}</p>
-        </li>
-        {{/each}}
-      </ul>
+          <!-- Date Submitted -->
+          <p class="text-sm text-gray-300 mt-4 text-center lg:text-left"><span class="font-bold text-white">Date
+              Submitted:</span>
+            {{this.createdAt}}</p>
+        </div>
+      </div>
+      {{/each}}
+    </div>
     {{else}}
-      <p class="text-center text-lg">No trade requests found.</p>
+    <!-- No Trade Requests Card -->
+    <div class="card bg-gray-100 shadow-xl w-full sm:w-4/5 lg:w-3/5 mb-6 p-4 lg:p-6 rounded-lg text-center">
+      <div class="card-body">
+        <h3 class="text-2xl font-extrabold mb-4 text-gray-700">
+          <i class="fas fa-exclamation-circle mr-2"></i> No Trade Requests Found
+        </h3>
+        <p class="text-lg text-gray-500">
+          It looks like there are no trade requests available at the moment. Please check back later or create a new
+          trade request.
+        </p>
+      </div>
+    </div>
     {{/if}}
   </div>
 
-  <!-- Include lower partial, if you have a footer -->
   {{>belowPart }}
+
 </body>
+
 </html>

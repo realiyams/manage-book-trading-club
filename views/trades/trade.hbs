@@ -1,4 +1,3 @@
-<!-- views/trades.hbs -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,49 +5,60 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Accepted Trades</title>
+  <!-- Include Tailwind CSS for styling -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
-<body>
-  <h1>Accepted Trade Requests</h1>
+<body class="bg-gray-100">
+  <div class="container mx-auto my-8 px-4">
+    <h1 class="text-3xl font-bold mb-5 text-center">Accepted Trade Requests</h1>
 
-  {{#if trades.length}}
-  <table>
-    <thead>
-      <tr>
-        <th>Requester</th>
-        <th>Responder</th>
-        <th>Requested Books</th>
-        <th>Offered Books</th>
-        <th>Created At</th>
-      </tr>
-    </thead>
-    <tbody>
+    {{#if trades.length}}
+    <div id="accepted-trades-list" class="flex flex-wrap justify-center">
       {{#each trades}}
-      <tr>
-        <td>{{this.requester.fullName}}</td>
-        <td>{{this.responder.fullName}}</td>
-        <td>
-          <ul>
+      <div class="card bg-white shadow-xl w-full sm:w-4/5 lg:w-3/5 mb-6 p-4 lg:p-6 rounded-lg">
+        <div class="card-body">
+          <!-- Trade Request Title -->
+          <h3 class="text-2xl font-extrabold mb-4 text-center">
+            Trade Request from {{this.requester.fullName}} to {{this.responder.fullName}}
+          </h3>
+
+          <!-- Requested Books -->
+          <h4 class="text-lg font-bold mb-2">Requested Books:</h4>
+          <ul class="list-disc list-inside mb-4">
             {{#each this.requestedBooks}}
             <li>{{this.title}}: {{this.description}}</li>
             {{/each}}
           </ul>
-        </td>
-        <td>
-          <ul>
+
+          <!-- Offered Books -->
+          <h4 class="text-lg font-bold mb-2">Offered Books:</h4>
+          <ul class="list-disc list-inside mb-4">
             {{#each this.offeredBooks}}
             <li>{{this.title}}: {{this.description}}</li>
             {{/each}}
           </ul>
-        </td>
-        <td>{{this.createdAt}}</td>
-      </tr>
+
+          <!-- Created At -->
+          <p class="text-sm text-gray-600"><span class="font-bold">Date Accepted:</span> {{this.createdAt}}</p>
+        </div>
+      </div>
       {{/each}}
-    </tbody>
-  </table>
-  {{else}}
-  <p>No accepted trades available.</p>
-  {{/if}}
+    </div>
+    {{else}}
+    <!-- No Accepted Trades Message in Card -->
+    <div class="card bg-gray-100 shadow-xl w-full sm:w-4/5 lg:w-3/5 mb-6 p-4 lg:p-6 rounded-lg text-center">
+      <div class="card-body">
+        <h3 class="text-2xl font-extrabold mb-4 text-gray-700">
+          <i class="fas fa-exclamation-circle mr-2"></i> No Accepted Trades Available
+        </h3>
+        <p class="text-lg text-gray-500">
+          There are currently no accepted trade requests. Please check back later.
+        </p>
+      </div>
+    </div>
+    {{/if}}
+  </div>
 </body>
 
 </html>
