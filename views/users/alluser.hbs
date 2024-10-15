@@ -14,41 +14,57 @@
 
   <div id="main" class="flex justify-center items-center px-4 md:p-10">
     <div id="users-list" class="w-full flex justify-center items-center">
-      <div class="card !static bg-cyan-700 shadow-xl w-full sm:w-4/5 lg:h-auto lg:w-3/5 pb-3 lg:pb-0 mt-2">
+      <div class="card !static bg-cyan-700 shadow-xl w-full sm:w-4/5 lg:h-auto lg:w-3/5 pb-3 lg:pb-0 mt-4">
         <div class="card-body p-4 lg:p-8 flex flex-col items-center w-full lg:justify-start lg:h-full lg:pl-8">
-          <h2 class="card-title text-white font-extrabold text-2xl justify-center mt-2 mb-2">All users
+          <h2 class="card-title text-white font-extrabold text-2xl justify-center mt-2 mb-2">
+            All users
           </h2>
+
           {{#if allUser.length}}
-          <table id="users-table" class="table !static text-left text-white text-lg bg-gray-800">
-            {{#each allUser}}
-            <tr class="book-row">
-              <td>
-                <p>
-                  <span class="font-bold">{{this.username}}</span>
-                </p>
-                <p>
-                  <span class="text-base font-normal">
-                    {{#if this.city}}
-                    {{this.city}}
-                    {{/if}}
-                    {{#if this.state}}
-                    , {{this.state}}
-                    {{/if}}
-                    {{#if this.address}}
-                    , {{this.address}}
-                    {{/if}}
-                  </span>
-                </p>
-              </td>
-            </tr>
-            {{/each}}
+          <table id="users-table" class="block sm:table card !static text-left text-white text-lg bg-gray-800 w-full">
+            <thead class="hidden sm:table-header-group">
+              <tr>
+                <th class="p-4">User Info</th>
+                <th class="p-4">Books (Available)</th>
+                <th class="p-4">Trade Requests</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each allUser}}
+              <tr class="block sm:table-row border-b border-gray-600">
+                <!-- User Info -->
+                <td class="p-4 flex flex-col sm:flex-row items-center sm:text-left text-center">
+                  <i class="fas fa-user mb-2 sm:mb-0 sm:mr-3 text-lg"></i> <!-- User icon -->
+                  <div>
+                    <p class="font-bold text-lg">{{this.username}}</p>
+                    <p class="text-sm font-normal">
+                      {{#if this.city}}{{this.city}},{{/if}}
+                      {{#if this.state}}{{this.state}},{{/if}}
+                      {{#if this.address}}{{this.address}}{{/if}}
+                    </p>
+                  </div>
+                </td>
+
+                <!-- Books (Available) -->
+                <td class="p-4 block sm:table-cell text-center">
+                  <i class="fas fa-book mr-2"></i> <!-- Book icon -->
+                  <span>{{this.books.length}}</span> <!-- Total number of books -->
+                  <span class="text-sm">(Available: {{this.availableBooksCount}})</span> <!-- Available books -->
+                </td>
+
+                <!-- Trade Requests -->
+                <td class="p-4 block sm:table-cell text-center">
+                  <i class="fas fa-exchange-alt mr-2"></i> <!-- Trade icon -->
+                  <span>{{this.receivedTradeRequests.length}}</span> <!-- Received trade requests -->
+                </td>
+              </tr>
+              {{/each}}
+            </tbody>
           </table>
           {{else}}
-          <table id="empty-user-users" class="table !static text-center text-white text-lg bg-gray-800">
+          <table id="empty-user-users" class="block text-center text-white text-lg bg-gray-800">
             <tr>
-              <td>
-                No available users at the moment.
-              </td>
+              <td class="p-4">No available users at the moment.</td>
             </tr>
           </table>
           {{/if}}
@@ -73,7 +89,6 @@
       // Hapus token dari cookie (opsional)
       document.cookie = 'token=; Max-Age=0;'; // Menetapkan waktu maksimum cookie ke 0 akan menghapusnya
     }
-
   </script>
 </body>
 

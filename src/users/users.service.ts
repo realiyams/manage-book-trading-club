@@ -9,16 +9,17 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) {}
+  ) { }
 
   async findAll(): Promise<User[]> {
-    return await this.userRepository.find({
-      relations: ['books', 'receivedTradeRequests'], // Load related books and receivedTradeRequests
-      where: {
-        books: {
-          isAvailable: true, // Filter books where isAvailable is true
-        },
-      },
+    const users = await this.userRepository.find({
+      relations: ['books', 'receivedTradeRequests'],
     });
+
+    // Calculate available books count for each user
+    return users.map(user => ({
+      ...user,
+      availableBooksCount: user.books.filter(book => book.isAvailable).length,
+    }));
   }
 }

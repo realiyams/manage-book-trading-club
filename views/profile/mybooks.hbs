@@ -86,7 +86,7 @@
       <div class="card-body p-4 lg:p-8 flex flex-col items-center w-full lg:justify-start lg:h-full lg:pl-8">
         <div class="mb-2 lg:mb-0 w-full flex justify-center flex-col">
           <h2 class="card-title text-white font-extrabold text-2xl justify-center mb-4 mt-2">
-            Add Book
+            <i class="fas fa-book text-4xl"></i> Add Book
             <span class="text-base font-normal">for {{user.username}}</span>
           </h2>
           <div class="divider divider-info m-0 w-full"></div>
@@ -95,13 +95,17 @@
         <div class="flex flex-col justify-center items-center w-full px-1 h-full">
           <div class="items-center md:w-4/5 lg:w-3/5">
             <div class="mb-2">
-              <label for="title" class="font-medium text-white">Title :</label>
+              <label for="title" class="font-medium text-white">
+                Title:
+              </label>
               <input type="text" id="title" name="title" value="" required
                 class="mt-1 p-2 w-full shadow-sm sm:text-sm border-gray-300 rounded-md text-black bg-white h-6">
             </div>
 
             <div class="mb-2">
-              <label for="description" class="font-medium text-white">Description :</label>
+              <label for="description" class="font-medium text-white">
+                Description:
+              </label>
               <input type="text" id="description" name="description" value="" required
                 class="mt-1 p-2 w-full shadow-sm sm:text-sm border-gray-300 rounded-md text-black bg-white h-6">
             </div>
@@ -109,8 +113,9 @@
 
           <div class="flex justify-center items-center w-full">
             <div class="card-actions mt-4">
-              <button id="addBookButton" class="w-full btn bg-green-950 h-10 text-white font-extrabold py-2 px-8">Add
-                Book to Exchange</button>
+              <button id="addBookButton" class="w-full btn bg-green-950 h-10 text-white font-extrabold py-2 px-8">
+                <i class="fas fa-plus mr-2"></i> Add Book to Exchange
+              </button>
             </div>
           </div>
         </div>
@@ -120,31 +125,44 @@
     <div id="books-list" class="w-full flex justify-center items-center">
       <div class="card !static bg-cyan-700 shadow-xl w-full sm:w-4/5 lg:h-auto lg:w-1/2 pb-3 lg:pb-0 mt-2">
         <div class="card-body p-4 lg:p-8 flex flex-col items-center w-full lg:justify-start lg:h-full lg:pl-8">
-          <h2 class="card-title text-white font-extrabold text-2xl justify-center mt-2 mb-2">{{user.username}}'s Books
-            <span class="text-base font-normal">available for trade</span></h2>
+          <h2 class="card-title text-white font-extrabold text-2xl justify-center mt-2 mb-2">
+            <i class="fas fa-book text-2xl"></i> {{user.username}}'s Books
+            <span class="text-base font-normal">available for trade</span>
+          </h2>
+
           {{#if userBooks.length}}
           <table id="books-table" class="table !static text-center text-white text-lg bg-gray-800">
-            {{#each userBooks}}
-            <tr class="book-row">
-              <td>
-                <p class="font-bold">{{this.title}}</p>
-                <p class="font-light">{{this.description}}</p>
-              </td>
-              <td>
-                {{#if this.receiver}}
-                received by
-                {{this.receiver.username}}
-                {{else}}
-                ready
-                {{/if}}
-              </td>
-              <td>
-                {{#unless this.receiver}}
-                <button class="delete-book-button btn btn-error bg-red-600" data-book-id="{{this.id}}">X</button>
-                {{/unless}}
-              </td>
-            </tr>
-            {{/each}}
+            <thead>
+              <tr>
+                <th class="text-left"><i class="fas fa-book-open mr-2"></i> Book Details</th>
+                <th><i class="fas fa-exchange-alt mr-2"></i> Status</th>
+                <th><i class="fas fa-trash-alt mr-2"></i> Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each userBooks}}
+              <tr class="book-row">
+                <td class="text-left">
+                  <p class="font-bold"><i class="fas fa-book text-2xl mr-4"></i>{{this.title}}</p>
+                  <p class="font-light ml-10">{{this.description}}</p>
+                </td>
+                <td>
+                  {{#if this.receiver}}
+                  <span class="text-green-400">received by {{this.receiver.username}}</span>
+                  {{else}}
+                  <span class="text-yellow-400">ready</span>
+                  {{/if}}
+                </td>
+                <td>
+                  {{#unless this.receiver}}
+                  <button class="delete-book-button btn btn-error bg-red-600" data-book-id="{{this.id}}">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                  {{/unless}}
+                </td>
+              </tr>
+              {{/each}}
+            </tbody>
           </table>
           {{else}}
           <table id="empty-user-books" class="table !static text-center text-white text-lg bg-gray-800">
@@ -158,6 +176,7 @@
         </div>
       </div>
     </div>
+
   </div>
 
   <dialog id="my_modal_1" class="modal">
@@ -237,12 +256,12 @@
             const newRow = document.createElement('tr');
             newRow.classList.add('book-row');
             newRow.innerHTML = `
-              <td>
-                <p class="font-bold">${data.title}</p>
-                <p class="font-light">${data.description}</p>
+              <td class="text-left">
+                <p class="font-bold"><i class="fas fa-book text-2xl mr-4"></i>${data.title}</p>
+                <p class="font-light ml-10">${data.description}</p>
               </td>
-              <td>${data.receiver ? `received by ${data.receiver.username}` : 'ready'}</td>
-              <td>${!data.receiver ? `<button class="delete-book-button btn btn-error glass bg-red-600" data-book-id="${data.id}">X</button>` : ''}</td>
+              <td>${data.receiver ? `<span class="text-green-400">received by ${data.receiver.username}</span>` : '<span class="text-yellow-400">ready</span>'}</td>
+              <td>${!data.receiver ? `<button class="delete-book-button btn btn-error bg-red-600" data-book-id="${data.id}"><i class="fas fa-trash-alt"></i></button>` : ''}</td>
             `;
             bookList.appendChild(newRow);
 

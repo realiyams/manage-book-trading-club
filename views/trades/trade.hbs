@@ -4,50 +4,69 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Accepted Trades</title>
-  <!-- Include Tailwind CSS for styling -->
+  <title>All Trades</title>
+  <!-- Include your CSS and Font Awesome as needed -->
+  <link href="/css/styles.css" rel="stylesheet">
+  <link rel="stylesheet" href="/fontawesome-free-6.5.2-web/css/all.min.css">
+  <!-- Tailwind CSS for styling -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
-<body class="bg-gray-100">
+<body class="w-full">
+  {{>upperPart }}
+
   <div class="container mx-auto my-8 px-4">
     <h1 class="text-3xl font-bold mb-5 text-center">Accepted Trade Requests</h1>
 
     {{#if trades.length}}
     <div id="accepted-trades-list" class="flex flex-wrap justify-center">
       {{#each trades}}
-      <div class="card bg-white shadow-xl w-full sm:w-4/5 lg:w-3/5 mb-6 p-4 lg:p-6 rounded-lg">
+      <div class="card !static bg-cyan-700 text-white shadow-xl w-full sm:w-4/5 lg:w-3/5 mb-6 p-6 rounded-lg">
         <div class="card-body">
           <!-- Trade Request Title -->
-          <h3 class="text-2xl font-extrabold mb-4 text-center">
-            Trade Request from {{this.requester.fullName}} to {{this.responder.fullName}}
+          <h3 class="text-3xl font-extrabold mb-4 text-center">
+            <i class="fas fa-exchange-alt"></i> Trade Request <br />from {{this.requester.fullName}} to
+            {{this.responder.fullName}}
           </h3>
 
           <!-- Requested Books -->
-          <h4 class="text-lg font-bold mb-2">Requested Books:</h4>
+          <h4 class="text-xl font-bold mb-2">
+            <i class="fas fa-book-open mr-2"></i> Requested Books:
+          </h4>
           <ul class="list-disc list-inside mb-4">
             {{#each this.requestedBooks}}
-            <li>{{this.title}}: {{this.description}}</li>
+            <li class="ml-4"><i class="fas fa-book mr-2"></i>{{this.title}}: {{this.description}}</li>
             {{/each}}
           </ul>
 
           <!-- Offered Books -->
-          <h4 class="text-lg font-bold mb-2">Offered Books:</h4>
+          <h4 class="text-xl font-bold mb-2">
+            <i class="fas fa-book-reader mr-2"></i> Offered Books:
+          </h4>
           <ul class="list-disc list-inside mb-4">
             {{#each this.offeredBooks}}
-            <li>{{this.title}}: {{this.description}}</li>
+            <li class="ml-4"><i class="fas fa-book mr-2"></i>{{this.title}}: {{this.description}}</li>
             {{/each}}
           </ul>
 
-          <!-- Created At -->
-          <p class="text-sm text-gray-600"><span class="font-bold">Date Accepted:</span> {{this.createdAt}}</p>
+          <!-- Date Submitted and Accepted -->
+          <div class="flex justify-center lg:justify-between mt-4">
+            <p class="text-sm text-gray-300 mt-4 lg:mt-0 text-center lg:text-left">
+              <i class="fas fa-calendar-alt mr-2"></i><span class="font-bold text-white">Date Submitted:</span>
+              {{this.createdAt}}
+            </p>
+            <p class="text-sm text-gray-300 mt-4 lg:mt-0 text-center lg:text-left">
+              <i class="fas fa-check-circle mr-2"></i><span class="font-bold text-white">Date Accepted:</span>
+              {{this.respondedAt}}
+            </p>
+          </div>
         </div>
       </div>
       {{/each}}
     </div>
     {{else}}
     <!-- No Accepted Trades Message in Card -->
-    <div class="card bg-gray-100 shadow-xl w-full sm:w-4/5 lg:w-3/5 mb-6 p-4 lg:p-6 rounded-lg text-center">
+    <div class="card bg-gray-100 shadow-xl w-full sm:w-4/5 lg:w-3/5 mb-6 p-6 rounded-lg text-center">
       <div class="card-body">
         <h3 class="text-2xl font-extrabold mb-4 text-gray-700">
           <i class="fas fa-exclamation-circle mr-2"></i> No Accepted Trades Available
@@ -59,6 +78,8 @@
     </div>
     {{/if}}
   </div>
+
+  {{>belowPart }}
 </body>
 
 </html>
