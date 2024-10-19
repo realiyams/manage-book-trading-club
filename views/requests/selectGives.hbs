@@ -21,28 +21,45 @@
       flex: 1;
       margin: 0 1rem;
     }
+
+    /* Add styles for book item */
+    .book-item {
+      @apply bg-gray-200 rounded-md p-4 mb-4;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 640px) {
+      #main {
+        height: auto;
+        /* Allow height to adjust on small screens */
+      }
+    }
   </style>
 </head>
 
 <body class="w-full">
   {{>upperPart }}
-  <form id="giveBookForm">
-    <div class="book-list">
-      <h3>Your Books to Give</h3>
-      <ul>
-        {{#each books}}
-        <li>
-          <label>
-            <input type="checkbox" name="selectedGiveBooks[]" value="{{this.id}}" data-title="{{this.title}}"
-              data-description="{{this.description}}">
-            {{this.title}} by {{../user.username}}
-          </label>
-        </li>
-        {{/each}}
-      </ul>
-    </div>
-    <button type="submit">Submit Selected Books to Give</button>
-  </form>
+
+  <div id="main" class="flex flex-col items-center justify-center p-5">
+    <form id="giveBookForm" class="card bg-cyan-700 w-full max-w-lg shadow-lg rounded-lg p-6">
+      <h2 class="text-2xl font-semibold text-center mb-4"><i class="fas fa-book"></i> Select Books To Give</h2>
+      <div class="book-list mb-4">
+        <h3 class="text-lg font-medium mb-2">Your Books to Give</h3>
+        <ul>
+          {{#each books}}
+          <li class="book-item">
+            <label class="flex items-center">
+              <input type="checkbox" name="selectedGiveBooks[]" value="{{this.id}}" data-title="{{this.title}}"
+                data-description="{{this.description}}" class="mr-2">
+              <span class="flex-1">{{this.title}} by {{../user.username}}</span>
+            </label>
+          </li>
+          {{/each}}
+        </ul>
+      </div>
+      <button type="submit" class="btn btn-primary w-full mt-4">Submit Selected Books to Give</button>
+    </form>
+  </div>
 
   <script>
     // Function to check previously selected books from localStorage
