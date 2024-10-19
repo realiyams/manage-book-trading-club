@@ -4,25 +4,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Books to Take</title>
+  <title>Welcome</title>
   <link href="/css/styles.css" rel="stylesheet">
   <link rel="stylesheet" href="/fontawesome-free-6.5.2-web/css/all.min.css">
-  <!-- Include Tailwind CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <!-- Include DaisyUI for additional components -->
-  <link href="https://cdn.jsdelivr.net/npm/daisyui@1.11.4/dist/full.css" rel="stylesheet">
-
-  <style>
-    #main {
-      height: calc(100vh - 10rem);
-    }
-  </style>
 </head>
 
 <body class="w-full">
   {{>upperPart }}
+  {{#if messages.success}}
+  <div id="success-message" class="fixed inset-x-0 mx-auto w-full max-w-screen-md px-4 lg:z-50">
+    <div role="alert"
+      class="bg-green-500 text-white font-bold px-4 py-3 lg:py-2 rounded-md flex items-center justify-between shadow-md">
+      <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6 hidden lg:block" fill="none"
+        viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <span class="flex-grow lg:pl-3" id="success-text">Welcome, {{user.username}} !</span>
+      <button type="button" class="text-white close lg:pb-2" onclick="closeSuccessAlert()">
+        <span aria-hidden="true" class="font-bold text-2xl">&times;</span>
+      </button>
+    </div>
+  </div>
+  <script>
+    function closeSuccessAlert() {
+      document.getElementById('success-message').style.display = 'none';
+    }
+    setTimeout(() => {
+      document.getElementById('success-message').style.display = "none";
+    }, 5000);
+  </script>
+  {{/if}}
 
-  <div id="main" class="flex justify-center items-center px-4 p-10">
+  <div id="main" class="flex justify-center items-center px-4 md:p-10">
     <div id="books-list" class="w-full flex justify-center items-center">
       <div class="card !static bg-cyan-700 shadow-xl w-full sm:w-4/5 lg:h-auto lg:w-3/5 pb-3 lg:pb-0 mt-2">
         <div class="card-body p-4 lg:p-8 flex flex-col items-center w-full lg:justify-start lg:h-full lg:pl-8">

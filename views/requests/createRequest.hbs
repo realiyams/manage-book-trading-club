@@ -168,7 +168,8 @@
           <div class="book-details">
             <p><strong>Title:</strong> ${book.title}</p>
             <p><strong>Description:</strong> ${book.description}</p>
-            <p><strong>Giver:</strong> ${book.giver.username}, ${book.giver.city}, ${book.giver.state}</p>
+            <p><strong>Giver:</strong> ${book.giver.username}</p>
+            <p style="margin-left:10px">${book.giver.city}<br/> ${book.giver.state}<br/> ${book.giver.address}</p>
           </div>
         `;
         booksToTakeContainer.appendChild(bookElement);

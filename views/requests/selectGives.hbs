@@ -13,25 +13,10 @@
   <link href="https://cdn.jsdelivr.net/npm/daisyui@1.11.4/dist/full.css" rel="stylesheet">
 
   <style>
-    #main {
-      height: calc(100vh - 10rem);
-    }
-
-    .book-section {
-      flex: 1;
-      margin: 0 1rem;
-    }
-
-    /* Add styles for book item */
-    .book-item {
-      @apply bg-gray-200 rounded-md p-4 mb-4;
-    }
-
     /* Responsive styles */
     @media (max-width: 640px) {
       #main {
         height: auto;
-        /* Allow height to adjust on small screens */
       }
     }
   </style>
@@ -41,66 +26,85 @@
   {{>upperPart }}
 
   <div id="main" class="flex flex-col items-center justify-center p-5">
-    <form id="giveBookForm" class="card bg-cyan-700 w-full max-w-lg shadow-lg rounded-lg p-6">
-      <h2 class="text-2xl font-semibold text-center mb-4"><i class="fas fa-book"></i> Select Books To Give</h2>
-      <div class="book-list mb-4">
-        <h3 class="text-lg font-medium mb-2">Your Books to Give</h3>
-        <ul>
-          {{#each books}}
-          <li class="book-item">
-            <label class="flex items-center">
-              <input type="checkbox" name="selectedGiveBooks[]" value="{{this.id}}" data-title="{{this.title}}"
-                data-description="{{this.description}}" class="mr-2">
-              <span class="flex-1">{{this.title}} by {{../user.username}}</span>
-            </label>
-          </li>
-          {{/each}}
-        </ul>
+    <div class="card !static bg-cyan-700 shadow-xl w-full sm:w-4/5 lg:w-3/5">
+      <div class="card-body p-6 lg:p-8">
+        <form id="giveBookForm" class="w-full">
+          <h2 class="text-2xl font-bold text-center mb-6 text-white">
+            <i class="fas fa-book"></i> Select Books To Give
+          </h2>
+
+          <div class="w-full overflow-x-auto mb-4">
+            <h3 class="text-lg font-semibold text-white mb-4">Your Books to Give</h3>
+
+            <table class="table w-full bg-gray-700 text-white">
+              <thead class="bg-gray-800">
+                <tr>
+                  <th></th>
+                  <th class="hidden sm:table-cell"></th>
+                  <th>Book Title</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each books}}
+                <tr class="hover:bg-gray-600">
+                  <td>
+                    <label class="cursor-pointer">
+                      <input type="checkbox" name="selectedGiveBooks[]" value="{{this.id}}" data-title="{{this.title}}"
+                        data-description="{{this.description}}" class="checkbox checkbox-primary mr-2">
+                    </label>
+                  </td>
+                  <td class="hidden sm:table-cell">
+                    <i class="fas fa-book book-item-icon text-2xl"></i>
+                  </td>
+                  <td class="font-medium">
+                    {{this.title}} by {{../user.username}}
+                  </td>
+                  <td>{{this.description}}</td>
+                </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Button submit yang ada di tengah -->
+          <button type="submit"
+            class="btn btn-success w-full sm:w-2/5 mt-4 text-white font-semibold rounded-lg mx-auto block">
+            Submit Selected Books to Give
+          </button>
+        </form>
       </div>
-      <button type="submit" class="btn btn-primary w-full mt-4">Submit Selected Books to Give</button>
-    </form>
+    </div>
   </div>
 
   <script>
-    // Function to check previously selected books from localStorage
+    // Load selected books from localStorage
     function loadSelectedGiveBooks() {
       const selectedGiveBooks = JSON.parse(localStorage.getItem('selectedBooksToGive')) || [];
-
-      // Iterate through each selected book ID and check the corresponding checkbox
       selectedGiveBooks.forEach(book => {
         const checkbox = document.querySelector(`input[name="selectedGiveBooks[]"][value="${book.id}"]`);
         if (checkbox) {
-          checkbox.checked = true; // Check the checkbox if it's part of the saved books
+          checkbox.checked = true;
         }
       });
     }
 
-    // Call the function after the DOM is loaded
     document.addEventListener('DOMContentLoaded', function () {
       loadSelectedGiveBooks();
     });
 
     document.getElementById('giveBookForm').addEventListener('submit', function (event) {
       event.preventDefault(); // Prevent default form submission
-
-      // Array to store selected books
       const selectedGiveBooks = [];
-
-      // Get all checked checkboxes
       document.querySelectorAll('input[name="selectedGiveBooks[]"]:checked').forEach(checkbox => {
-        // Push the book data into the selectedGiveBooks array
         selectedGiveBooks.push({
           id: checkbox.value,
           title: checkbox.getAttribute('data-title'),
           description: checkbox.getAttribute('data-description')
         });
       });
-
-      // Store selected books in localStorage
       localStorage.setItem('selectedBooksToGive', JSON.stringify(selectedGiveBooks));
-
-      // Optional: Redirect to another page if necessary
-      window.location.href = '/create-request';
+      window.location.href = '/create-request'; // Redirect after form submission
     });
   </script>
   {{>belowPart }}

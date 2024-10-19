@@ -9,17 +9,13 @@
   <link rel="stylesheet" href="/fontawesome-free-6.5.2-web/css/all.min.css">
   <!-- Include Tailwind CSS -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <!-- Include DaisyUI for additional components -->
   <link href="https://cdn.jsdelivr.net/npm/daisyui@1.11.4/dist/full.css" rel="stylesheet">
 
   <style>
-    #main {
-      height: calc(100vh - 10rem);
-    }
-
-    .book-section {
-      flex: 1;
-      margin: 0 1rem;
+    @media (max-width: 640px) {
+      #main {
+        height: auto;
+      }
     }
   </style>
 </head>
@@ -27,77 +23,156 @@
 <body class="w-full">
   {{>upperPart }}
 
-  <form id="bookForm">
-    <div class="book-list">
-      <h3>Select Books to Take</h3>
-      <ul>
-        {{#each books}}
-        <li>
-          <label>
-            <input type="checkbox" name="selectedBooks[]" value="{{this.id}}" data-title="{{this.title}}"
-              data-description="{{this.description}}" data-giver='{
-                     "id": {{this.giver.id}},
-                     "username": "{{this.giver.username}}",
-                     "fullName": "{{this.giver.fullName}}",
-                     "city": "{{this.giver.city}}",
-                     "state": "{{this.giver.state}}",
-                     "address": "{{this.giver.address}}"
-                   }'>
-            {{this.title}} by {{this.giver.username}}
-          </label>
-        </li>
-        {{/each}}
-      </ul>
+  <div id="main" class="flex flex-col items-center justify-center p-5">
+    <div class="card !static bg-cyan-700 shadow-xl w-full sm:w-4/5 lg:w-3/5">
+      <div class="card-body p-6 lg:p-8">
+        <form id="takeBookForm" class="w-full">
+          <h2 class="text-2xl font-bold text-center mb-6 text-white">
+            <i class="fas fa-book"></i> Select Books To Take
+          </h2>
+          <p class="text-sm text-gray-300 mb-2">* You can only select books from the same giver.</p>
+
+          <div class="w-full overflow-x-auto mb-4">
+            <h3 class="text-lg font-semibold text-white mb-4">Available Books to Take</h3>
+
+            <table class="table w-full bg-gray-700 text-white">
+              <thead class="bg-gray-800">
+                <tr>
+                  <th></th>
+                  <th class="hidden sm:table-cell"></th>
+                  <th>Book Title</th>
+                  <th>Giver's Information</th>
+                </tr>
+              </thead>
+              <tbody id="booksTableBody">
+                {{#each books}}
+                <tr class="hover:bg-gray-600">
+                  <td>
+                    <label class="cursor-pointer">
+                      <input type="checkbox" name="selectedBooks[]" value="{{this.id}}" data-title="{{this.title}}"
+                        data-description="{{this.description}}" data-giver-id="{{this.giver.id}}"
+                        data-giver-username="{{this.giver.username}}"
+                        data-giver-city="{{this.giver.city}}"
+                        data-giver-state="{{this.giver.state}}"
+                        data-giver-address="{{this.giver.address}}"
+                        class="checkbox checkbox-primary mr-2">
+                    </label>
+                  </td>
+                  <td class="hidden sm:table-cell">
+                    <i class="fas fa-book book-item-icon text-2xl"></i>
+                  </td>
+                  <td class="font-medium">
+                    {{this.title}} by {{this.giver.username}}
+                  </td>
+                  <td>
+                    {{this.giver.fullName}}, {{this.giver.city}}, {{this.giver.state}}, {{this.giver.address}}
+                  </td>
+                </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          </div>
+
+          <button type="submit"
+            class="btn btn-success w-full sm:w-2/5 mt-4 text-white font-semibold rounded-lg mx-auto block">
+            Submit Selected Books to Take
+          </button>
+        </form>
+      </div>
     </div>
-    <button type="submit">Submit Selected Books</button>
-  </form>
+  </div>
 
   <script>
-    // Function to check previously selected books from localStorage
-    function loadSelectedBooks() {
+    // Load selected books from localStorage
+    function loadSelectedBooksToTake() {
       const selectedBooks = JSON.parse(localStorage.getItem('selectedBooksToTake')) || [];
+      return selectedBooks;
+    }
 
-      // Iterate through each selected book ID and check the corresponding checkbox
+    document.addEventListener('DOMContentLoaded', function () {
+      const selectedBooks = loadSelectedBooksToTake();
+      const bookCheckboxes = document.querySelectorAll('input[name="selectedBooks[]"]');
+
+      let currentGiverId = null;
+
+      // Set the state of the checkboxes based on selected books
       selectedBooks.forEach(book => {
         const checkbox = document.querySelector(`input[name="selectedBooks[]"][value="${book.id}"]`);
         if (checkbox) {
-          checkbox.checked = true; // Check the checkbox if it's part of the saved books
+          checkbox.checked = true;
+
+          if (!currentGiverId) {
+            currentGiverId = checkbox.getAttribute('data-giver-id');
+          } else if (currentGiverId !== checkbox.getAttribute('data-giver-id')) {
+            // If a different giver is found, uncheck all and reset the current giver
+            bookCheckboxes.forEach(cb => {
+              cb.checked = false;
+              cb.disabled = false; // Enable all
+            });
+            currentGiverId = null;
+          }
         }
       });
-    }
 
-    // Call the function after the DOM is loaded
-    document.addEventListener('DOMContentLoaded', function () {
-      loadSelectedBooks();
+      // Update the checkbox states based on the current selection
+      updateCheckboxStates();
     });
 
-    document.getElementById('bookForm').addEventListener('submit', function (event) {
+    const takeBookForm = document.getElementById('takeBookForm');
+    const bookCheckboxes = document.querySelectorAll('input[name="selectedBooks[]"]');
+
+    let selectedGiverId = null;
+
+    // Function to update the state of checkboxes based on the selected giver
+    function updateCheckboxStates() {
+      const checkedBooks = document.querySelectorAll('input[name="selectedBooks[]"]:checked');
+      if (checkedBooks.length > 0) {
+        selectedGiverId = checkedBooks[0].getAttribute('data-giver-id');
+        bookCheckboxes.forEach(checkbox => {
+          if (checkbox.getAttribute('data-giver-id') !== selectedGiverId) {
+            checkbox.disabled = true; // Disable books from other givers
+          }
+        });
+      } else {
+        // Reset if no books are selected
+        selectedGiverId = null;
+        bookCheckboxes.forEach(checkbox => {
+          checkbox.disabled = false; // Enable all books
+        });
+      }
+    }
+
+    // Event listener for checkbox change
+    bookCheckboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', function () {
+        updateCheckboxStates();
+      });
+    });
+
+    takeBookForm.addEventListener('submit', function (event) {
       event.preventDefault(); // Prevent default form submission
 
-      // Array to store selected books
       const selectedBooks = [];
-
-      // Get all checked checkboxes
       document.querySelectorAll('input[name="selectedBooks[]"]:checked').forEach(checkbox => {
-        // Parse giver data from data-giver attribute
-        const giver = JSON.parse(checkbox.getAttribute('data-giver'));
-
-        // Push the book data into the selectedBooks array
         selectedBooks.push({
           id: checkbox.value,
           title: checkbox.getAttribute('data-title'),
           description: checkbox.getAttribute('data-description'),
-          giver: giver
+          giver: {
+            id: checkbox.getAttribute('data-giver-id'),
+            username: checkbox.getAttribute('data-giver-username'),
+            city: checkbox.getAttribute('data-giver-city'),
+            state: checkbox.getAttribute('data-giver-state'),
+            address: checkbox.getAttribute('data-giver-address')
+          }
         });
       });
 
-      // Store selected books in localStorage
       localStorage.setItem('selectedBooksToTake', JSON.stringify(selectedBooks));
-
-      // Optional: Redirect to another page if necessary
-      window.location.href = '/create-request';
+      window.location.href = '/create-request'; // Redirect after form submission
     });
   </script>
+
   {{>belowPart }}
 </body>
 
