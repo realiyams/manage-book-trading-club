@@ -7,7 +7,8 @@
   <title>All Trades</title>
   <!-- Include your CSS and Font Awesome as needed -->
   <link href="/css/styles.css" rel="stylesheet">
-  <link rel="stylesheet" href="/fontawesome-free-6.5.2-web/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
   <!-- Tailwind CSS for styling -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
@@ -65,16 +66,19 @@
       {{/each}}
     </div>
     {{else}}
-    <!-- No Accepted Trades Message in Card -->
-    <div class="card bg-gray-100 shadow-xl w-full sm:w-4/5 lg:w-3/5 mb-6 p-6 rounded-lg text-center">
-      <div class="card-body">
-        <h3 class="text-2xl font-extrabold mb-4 text-gray-700">
-          <i class="fas fa-exclamation-circle mr-2"></i> No Accepted Trades Available
-        </h3>
-        <p class="text-lg text-gray-500">
-          There are currently no accepted trade requests. Please check back later.
-        </p>
+    <div id="accepted-trades-list" class="flex flex-wrap justify-center">
+      <!-- No Accepted Trades Message in Card -->
+      <div class="card bg-gray-100 shadow-xl w-full sm:w-4/5 lg:w-3/5 mb-6 p-6 rounded-lg text-center">
+        <div class="card-body">
+          <h3 class="text-2xl font-extrabold mb-4 text-gray-700">
+            <i class="fas fa-exclamation-circle mr-2"></i> No Accepted Trades Available
+          </h3>
+          <p class="text-lg text-gray-500">
+            There are currently no accepted trade requests. Please check back later.
+          </p>
+        </div>
       </div>
+
     </div>
     {{/if}}
   </div>

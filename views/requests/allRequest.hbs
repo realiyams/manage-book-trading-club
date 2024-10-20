@@ -7,7 +7,8 @@
   <title>All Trade Requests</title>
   <!-- Include your CSS and Font Awesome as needed -->
   <link href="/css/styles.css" rel="stylesheet">
-  <link rel="stylesheet" href="/fontawesome-free-6.5.2-web/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
   <!-- Tailwind CSS for styling -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
@@ -82,17 +83,20 @@
       {{/each}}
     </div>
     {{else}}
-    <!-- No Trade Requests Card -->
-    <div class="card bg-gray-100 shadow-xl w-full sm:w-4/5 lg:w-3/5 mb-6 p-4 lg:p-6 rounded-lg text-center">
-      <div class="card-body">
-        <h3 class="text-2xl font-extrabold mb-4 text-gray-700">
-          <i class="fas fa-exclamation-circle mr-2"></i> No Trade Requests Found
-        </h3>
-        <p class="text-lg text-gray-500">
-          It looks like there are no trade requests available at the moment. Please check back later or create a new
-          trade request.
-        </p>
+    <div id="trade-requests-list" class="flex flex-wrap justify-center">
+      <!-- No Trade Requests Card -->
+      <div class="card bg-gray-100 shadow-xl w-full sm:w-4/5 lg:w-3/5 mb-6 p-4 lg:p-6 rounded-lg text-center">
+        <div class="card-body">
+          <h3 class="text-2xl font-extrabold mb-4 text-gray-700">
+            <i class="fas fa-exclamation-circle mr-2"></i> No Trade Requests Found
+          </h3>
+          <p class="text-lg text-gray-500">
+            It looks like there are no trade requests available at the moment. Please check back later or create a new
+            trade request.
+          </p>
+        </div>
       </div>
+
     </div>
     {{/if}}
   </div>

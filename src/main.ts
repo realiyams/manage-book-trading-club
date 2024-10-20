@@ -11,17 +11,18 @@ import * as connectLiveReload from 'connect-livereload';
 
 import flash = require('express-flash');
 
-const liveReloadServer = livereload.createServer();
-liveReloadServer.server.once('connection', () => {
-  setTimeout(() => {
-    liveReloadServer.refresh('/');
-  }, 100);
-});
+// const liveReloadServer = livereload.createServer();
+// liveReloadServer.server.once('connection', () => {
+//   setTimeout(() => {
+//     liveReloadServer.refresh('/');
+//   }, 100);
+// });
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-
-  app.use(connectLiveReload());
+  
+  // app.use(connectLiveReload());
+  app.enableCors();
 
   app.use(
     session({
